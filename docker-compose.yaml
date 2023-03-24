@@ -24,15 +24,17 @@ services:
 
   postgres:
     build:
-      context: ./db
+      context: ./relational-data
       dockerfile: ./Dockerfile.dev
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_MULTIPLE_DATABASES=mealmate
-      - POSTGRES_PASSWORD=test-databases
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=test-admin
     ports:
       - 15432:5432
+
   pg-admin:
     image: dpage/pgadmin4
     volumes:
@@ -41,7 +43,7 @@ services:
       - 8082:80
     environment:
       PGADMIN_DEFAULT_EMAIL: mm15@mm15.com
-      PGADMIN_DEFAULT_PASSWORD: mm15
+      PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_DISABLE_POSTFIX: 1
 
   mealmate:
