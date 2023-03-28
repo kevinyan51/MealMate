@@ -1,12 +1,10 @@
 volumes:
   postgres-data:
     external: true
-
   pg-admin:
     external: true
 
 services:
-
   pg-admin:
     image: dpage/pgadmin4
     volumes:
@@ -40,20 +38,20 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_MULTIPLE_DATABASES=mealmate
-      - POSTGRES_PASSWORD=test-admindatabse
+      - POSTGRES_MULTIPLE_DATABASES=mealmates
+      - POSTGRES_PASSWORD=test-databases
     ports:
       - 15432:5432
 
-  mealmate:
+  mealmate-service:
     build:
-      context: ./mealmate
-      dockerfile: Dockerfile.dev
+      context: ./mealmate-service
+      dockerfile: ./Dockerfile.dev
     ports:
-      - 8080:8080
+      - "8000:8000"
     volumes:
-      - ./mealmate:/app
+      - ./mealmate-service:/app
     environment:
       SIGNING_KEY: ${SIGNING_KEY}
-      DATABASE_URL: postgresql://mealmate:password@postgres/mealmate
+      DATABASE_URL: postgresql://mealmates:password@postgres/mealmates
       WAIT_HOSTS: postgres:5432
