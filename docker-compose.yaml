@@ -7,6 +7,17 @@ volumes:
 
 services:
 
+  pg-admin:
+    image: dpage/pgadmin4
+    volumes:
+      - pg-admin:/var/lib/pgadmin
+    ports:
+      - 8082:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mm15.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_DISABLE_POSTFIX: 1
+
   ghi:
     image: node:lts-bullseye
     command: /bin/bash run.sh
@@ -20,7 +31,7 @@ services:
       NODE_ENV: development
       HOST: "0.0.0.0"
       PUBLIC_URL: http://localhost:3000
-      REACT_APP_MEALMATE_API: http://localhost:8000
+      REACT_APP_MEALMATE_API: http://localhost:8080
 
   postgres:
     build:
@@ -30,32 +41,19 @@ services:
       - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_MULTIPLE_DATABASES=mealmate
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=test-admin
+      - POSTGRES_PASSWORD=test-admindatabse
     ports:
       - 15432:5432
-
-  pg-admin:
-    image: dpage/pgadmin4
-    volumes:
-      - pg-admin:/var/lib/pgadmin
-    ports:
-      - 8082:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: mm15@mm15.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_DISABLE_POSTFIX: 1
 
   mealmate:
     build:
       context: ./mealmate
       dockerfile: Dockerfile.dev
     ports:
-      - 8000:8000
+      - 8080:8080
     volumes:
       - ./mealmate:/app
     environment:
       SIGNING_KEY: ${SIGNING_KEY}
       DATABASE_URL: postgresql://mealmate:password@postgres/mealmate
       WAIT_HOSTS: postgres:5432
-      PORT: 8000
