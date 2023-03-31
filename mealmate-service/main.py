@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import meal, user
+from routers import meal, user,meal_details
 import os
 
 app = FastAPI()
 app.include_router(meal.router)
 app.include_router(user.router)
+app.include_router(meal_details.router)
 
 app.add_middleware(
     CORSMiddleware,
