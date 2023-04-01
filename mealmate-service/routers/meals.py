@@ -6,7 +6,7 @@ from queries.meals import Error, MealOut, MealRepo
 router = APIRouter()
 
 
-@router.get("/", response_model=Union[List[MealOut], Error])
+@router.get("/meals/", response_model=Union[List[MealOut], Error])
 def get_all(
     repo: MealRepo = Depends(),
 ):
