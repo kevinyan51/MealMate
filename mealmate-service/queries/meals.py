@@ -21,42 +21,18 @@ class MealOut(BaseModel):
 
 
 class MealRepo:
-    def get_all(self) -> Union[Error, List[MealOut]]:
+    def get_all(self) -> Union[List[MealOut], Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
-                    result = cur.execute(
+                    cur.execute(
                         """
-                        SELECT id
-                          , name
-                          , created_at
-                          , updated_at
-                          , picture_url
-                          , description
-                          , instructions
-                          , ingredients
-                          , chef_id
-                        FROM meals
-                        ORDER BY created_at;
+                        SELECT *
+                        FROM meals m
+                        JOIN users u on m.chef_id = u.id
+                        ORDER by m.created_at
                         """
                     )
-                    print("records")
-                    print(result)
-
-                    return [self.record_to_meal(record) for record in result]
+                    print(cur.fetchone())
         except Exception as e:
-            print(e)
-            return {"message": "Could not get all meals"}
-
-    def record_to_meal(self, record):
-        return MealOut(
-            id=record[0],
-            name=record[1],
-            created_at=record[2],
-            updated_at=record[3],
-            picture_url=record[4],
-            description=record[5],
-            instructions=record[6],
-            ingredients=record[7],
-            chef_id=record[8],
-        )
+            print("Error", e)
