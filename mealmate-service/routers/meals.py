@@ -6,8 +6,20 @@ from queries.meals import Error, MealOut, MealRepo
 router = APIRouter()
 
 
+# @router.get("/meals/", response_model=Union[List[MealOut], Error])
+# def get_all(
+#     repo: MealRepo = Depends(),
+# ):
+#     return repo.get_all()
+
+
 @router.get("/meals/", response_model=Union[List[MealOut], Error])
 def get_all(
+    resp: Response,
     repo: MealRepo = Depends(),
 ):
-    return repo.get_all()
+    result = repo.get_all()
+    # if hasattr(result, "message"):
+    if result is None:
+        resp.status_code = 500
+    return result
