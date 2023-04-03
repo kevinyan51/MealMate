@@ -17,7 +17,7 @@ steps = [
         """
         CREATE TABLE boxes (
             id serial not null primary key,
-            user_id int references users(id) not null
+            subscriber_id int references users(id) not null
         );
         """,
         # "Down" SQL statement
