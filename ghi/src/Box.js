@@ -44,7 +44,6 @@ const FAKE_DATA = [
 
 const Box = () => {
   const [box, setBox] = useState({});
-  const [allMeals, setAllMeals] = useState(FAKE_DATA);
 
   const getAllMeals = async () => {
     const url = 'http://localhost:8000/api/meals/';

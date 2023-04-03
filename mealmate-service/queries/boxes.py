@@ -69,38 +69,33 @@ class BoxRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
+                        SELECT u.first_name as subscriber_first_name, u.last_name as subscriber_last_name, u.id as subscriber_id
+                        FROM boxes b
+                        JOIN users u on u.id = b.subscriber_id
+                        WHERE b.id = %s
+                        """,
+                        [box_id],
+                    )
+                    user_info = cur.fetchone()
+                    subscriber_first_name = user_info[0]
+                    subscriber_last_name = user_info[1]
+                    subscriber_id = user_info[2]
+
+                    cur.execute(
+                        """
                         SELECT m.*
                         , u.first_name as chef_first_name
                         , u.last_name as chef_last_name
                         , bm.quantity
-                        , u2.id as subscriber_id
-                        , u2.first_name as subscriber_first_name
-                        , u2.last_name as subscriber_last_name
                         FROM box_meals bm
                         JOIN meals m ON m.id = bm.meal_id
                         JOIN boxes b ON b.id = bm.box_id
                         JOIN users u on u.id = m.chef_id
-                        JOIN users u2 on u2.id = b.subscriber_id
                         WHERE b.id = %s
                         """,
                         [box_id],
                     )
                     recs = cur.fetchall()
-                    subscriber_id = recs[0][19]
-                    subscriber_first_name = recs[0][20]
-                    subscriber_last_name = recs[0][21]
-                    print("-----------------------------------")
-                    print(
-                        "subscriber_id: ",
-                        subscriber_id,
-                        "subscriber_first_name: ",
-                        subscriber_first_name,
-                        "subscriber_last_name: ",
-                        subscriber_last_name,
-                        "rec",
-                        recs[0],
-                    )
-                    print("-----------------------------------")
                     return BoxInOut(
                         box_id=box_id,
                         subscriber_id=subscriber_id,
