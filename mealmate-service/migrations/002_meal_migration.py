@@ -18,7 +18,8 @@ steps = [
             is_vegan BOOLEAN NOT NULL default false,
             is_chef_choice BOOLEAN NOT NULL default false,
             is_spicy BOOLEAN NOT NULL default false,
-            has_cheese BOOLEAN NOT NULL default false
+            has_cheese BOOLEAN NOT NULL default false,
+            price DECIMAL NOT NULL default 9.99
         );
         """,
         # "Down" SQL statement
