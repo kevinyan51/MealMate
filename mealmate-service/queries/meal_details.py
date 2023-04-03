@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from queries.pool import pool
+from datetime import date
 
 
 class Error(BaseModel):
@@ -8,12 +9,22 @@ class Error(BaseModel):
 
 class MealOut(BaseModel):
     id: int
+    chef_id: int
     name: str
+    name2: str
+    created_at: date
+    updated_at: date
     picture_url: str
     description: str
     instructions: str
     ingredients: str
-    chef_id: int
+    calories: int
+    is_keto: bool
+    is_vegan: bool
+    is_chef_choice: bool
+    is_spicy: bool
+    has_cheese: bool
+    price: float
 
 
 class MealDetailsRepository:
@@ -23,15 +34,27 @@ class MealDetailsRepository:
                 with conn.cursor() as cur:
                     result = cur.execute(
                         """
-                        SELECT id
-                            , name
-                            , picture_url
+                        SELECT meals.id
+                            , chef_id
+                            , meals.name
+                            , name2
+                            , meals.created_at
+                            , meals.updated_at
+                            , meals.picture_url
                             , description
                             , instructions
                             , ingredients
-                            , chef_id
+                            , calories
+                            , is_keto
+                            , is_vegan
+                            , is_chef_choice
+                            , is_spicy
+                            , has_cheese
+                            , price
                         FROM meals
-                        WHERE id = %s
+                        LEFT JOIN users
+                        ON meals.chef_id = users.id
+                        WHERE meals.id = %s
                         """,
                         [meals_id]
                     )
@@ -47,10 +70,20 @@ class MealDetailsRepository:
     def record_to_meal_out(self, record):
         return MealOut(
             id=record[0],
-            name=record[1],
-            picture_url=record[2],
-            description=record[3],
-            instructions=record[4],
-            ingredients=record[5],
-            chef_id=record[6],
+            chef_id=record[1],
+            name=record[2],
+            name2=record[3],
+            created_at=record[4],
+            updated_at=record[5],
+            picture_url=record[6],
+            description=record[7],
+            instructions=record[8],
+            ingredients=record[9],
+            calories=record[10],
+            is_keto=record[11],
+            is_vegan=record[12],
+            is_chef_choice=record[13],
+            is_spicy=record[14],
+            has_cheese=record[15],
+            price=record[16],
         )
