@@ -5,7 +5,7 @@ steps = [
         CREATE TABLE orders (
           id serial NOT NULL PRIMARY KEY,
           status_id INT REFERENCES statuses(id) NOT NULL,
-          user_id INT REFERENCES users(id) NOT NULL,
+          subscriber_id INT REFERENCES users(id) NOT NULL,
           created_at TIMESTAMP NOT NULL default now(),
           updated_at TIMESTAMP NOT NULL default now()
         );
