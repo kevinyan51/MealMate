@@ -25,6 +25,8 @@ class MealOut(BaseModel):
     is_spicy: bool
     has_cheese: bool
     price: float
+    first_name: str
+    last_name: str
 
 
 class MealDetailsRepository:
@@ -51,6 +53,8 @@ class MealDetailsRepository:
                             , is_spicy
                             , has_cheese
                             , price
+                            , first_name
+                            , last_name
                         FROM meals
                         LEFT JOIN users
                         ON meals.chef_id = users.id
@@ -86,6 +90,8 @@ class MealDetailsRepository:
             is_spicy=record[14],
             has_cheese=record[15],
             price=record[16],
+            first_name=record[17],
+            last_name=record[18]
         )
 
 
