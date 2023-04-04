@@ -14,10 +14,15 @@ class OrderOut(BaseModel):
     meals: List[MealOutWQty]
 
 
-class SingleOrderMealOut(MealOutWQty):
+class SingleOrderMealOut(BaseModel):
     order_id: int
     order_created_at: datetime
     order_updated_at: datetime
+    meal_id: int
+    meal_name: str
+    meal_subtitle: str
+    meal_price: float
+    quantity: int
 
 
 class OrderRepo:
@@ -30,7 +35,10 @@ class OrderRepo:
                         SELECT o.id
                           , o.created_at
                           , o.updated_at
-                          , m.*
+                          , m.id
+                          , m.name
+                          , m.name2
+                          , m.price
                           , om.quantity
                         FROM orders o
                         JOIN order_meals om on o.id = om.order_id
@@ -44,12 +52,14 @@ class OrderRepo:
                     if recs == []:
                         return Error(message="No orders found.")
                     else:
-                        print("-------------------------------------------")
-                        print("records", recs)
-                        print("-------------------------------------------")
                         res = [self.record_to_order_out(rec) for rec in recs]
-                        res = [self.parse_records_to_order_out(res)]
-                        return [self.add_total_price(v) for v in res]
+                        res = self.parse_records_to_order_out(res)
+                        print("here")
+                        res = [self.add_total_price(v) for v in res]
+                        print("-------------------------------------------")
+                        print("records", res[0])
+                        print("-------------------------------------------")
+                        return res
 
         except Exception as e:
             print(
@@ -59,18 +69,23 @@ class OrderRepo:
 
     def parse_records_to_order_out(self, records):
         res = {}
+        print("records", records[0].meal_id, records[0].order_id)
         for record in records:
+            print("start here")
+            print("order_id", record.order_id)
             order_id = record.order_id
-            if res[order_id]:
+            if res.get(order_id):
+                print("in if")
                 res[order_id].meals.append(record)
             else:
+                print("in else")
                 res[order_id] = OrderOut(
                     order_id=order_id,
                     order_created_at=record.order_created_at,
                     order_updated_at=record.order_updated_at,
-                    num_meals=1,
                     meals=[record],
                 )
+        print(res.values())
         result = [self.add_total_price(v) for v in res.values()]
         return result
 
@@ -93,21 +108,8 @@ class OrderRepo:
             order_created_at=record[1],
             order_updated_at=record[2],
             meal_id=record[3],
-            chef_id=record[4],
-            name=record[5],
-            name2=record[6],
-            created_at=record[7],
-            updated_at=record[8],
-            picture_url=record[9],
-            description=record[10],
-            instructions=record[11],
-            ingredients=record[12],
-            calories=record[13],
-            is_keto=record[14],
-            is_vegan=record[15],
-            is_chef_choice=record[16],
-            is_spicy=record[17],
-            has_cheese=record[18],
-            price=record[19],
-            quantity=record[20],
+            meal_name=record[4],
+            meal_subtitle=record[5],
+            meal_price=record[6],
+            quantity=record[7],
         )
