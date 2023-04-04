@@ -1,6 +1,7 @@
+from authenticator import authenticator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import meals, meal_details, boxes, createmeals
+from routers import meals, meal_details, boxes, createmeals, users
 import datetime
 import os
 
@@ -34,3 +35,5 @@ app.include_router(meals.router, prefix="/api", tags=["meals"])
 app.include_router(meal_details.router, prefix="/api", tags=["meals"])
 app.include_router(boxes.router, prefix="/api", tags=["boxes"])
 app.include_router(createmeals.router, prefix="/api", tags=["chef"])
+app.include_router(authenticator.router)
+app.include_router(users.router)
