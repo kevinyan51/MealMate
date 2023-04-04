@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from queries.pool import pool
 from datetime import date
+from datetime import date
 
 
 class Error(BaseModel):
@@ -25,8 +26,6 @@ class MealOut(BaseModel):
     is_spicy: bool
     has_cheese: bool
     price: float
-    first_name: str
-    last_name: str
 
 
 class MealDetailsRepository:

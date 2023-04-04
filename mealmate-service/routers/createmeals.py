@@ -11,3 +11,11 @@ def create_meal(meals: MealIn, response: Response, repo: MealRepository = Depend
     if result == None:
         response.status_code = 500
     return result
+
+@router.put("/meals/{meal_id}/", response_model=Union[MealOut, Error])
+def update_meal(
+    meal_id: int,
+    meal: MealIn,
+    repo: MealRepository = Depends(),
+) -> Union[Error, MealOut]:
+    return repo.update_meal(meal_id, meal)
