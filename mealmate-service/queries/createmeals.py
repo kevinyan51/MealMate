@@ -84,3 +84,19 @@ class MealRepository:
     def meal_in_to_out(self, id:int, meal:MealIn):
         old_data = meal.dict()
         return MealOut(id=id, **old_data)
+
+    def delete(self, meal_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        '''
+                        DELETE FROM meals
+                        WHERE id = %s
+                        ''',
+                        [meal_id]
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False 
