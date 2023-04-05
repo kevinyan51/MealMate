@@ -1,7 +1,6 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import './App.css';
 import Nav from './components/Nav.js';
-import MealDetail from './components/MealDetail.js';
 import LandingPage from './pages/LandingPage.js';
 import LoginPage from './pages/LoginPage.js';
 import SignupPage from './pages/SignupPage.js';
@@ -10,6 +9,7 @@ import ErrorPage from './pages/ErrorPage.js';
 import BoxEditPage from './pages/BoxEditPage.js';
 import MealCreatePage from './pages/MealCreatePage.js';
 import MealEditPage from './pages/MealEditPage.js';
+import MealDetailPage from './pages/MealDetailPage.js';
 import OrderListPage from './pages/OrderListPage.js';
 import OrderDetailPage from './pages/OrderDetailPage.js';
 
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: 'new', element: <MealCreatePage /> },
-      { path: ':mealId', element: <MealDetail /> },
+      { path: ':mealId', element: <MealDetailPage /> },
       { path: ':mealId/edit', element: <MealEditPage /> },
     ],
   },
