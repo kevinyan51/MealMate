@@ -7,7 +7,7 @@ const MealDetailPage = () => {
     <>
       {/* if user role is chef, show this component */}
       <ChefMealDetailPage />
-      {/* elif user role is subscriber, show this instead */}
+      {/* elif user role is subscriber, show this instead  */}
       <SubscriberMealDetailPage />
     </>
   );
