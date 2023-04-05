@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -39,8 +39,10 @@ const pagesToRoutes = {
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Nav = () => {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [pictureUrl, setPictureUrl] = useState(
+    'https://static8.depositphotos.com/1377527/955/i/450/depositphotos_9551898-stock-photo-head-shot-of-chef.jpg'
+  );
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -55,7 +57,7 @@ const Nav = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <RestaurantIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <RestaurantIcon sx={{ display: 'flex', mr: 1 }} />
           <Typography variant="h6" noWrap sx={{ ml: 2, mr: 2, color: 'white' }}>
             MEALMATE
           </Typography>
@@ -75,7 +77,7 @@ const Nav = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="MealMate" src={pictureUrl} />
               </IconButton>
             </Tooltip>
             <Menu
