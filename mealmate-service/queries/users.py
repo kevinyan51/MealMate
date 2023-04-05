@@ -23,7 +23,7 @@ class UserIn(BaseModel):
 
 
 class UserOut(BaseModel):
-    user_id: int
+    id: int
     role_id: int
     first_name: str
     last_name:str
