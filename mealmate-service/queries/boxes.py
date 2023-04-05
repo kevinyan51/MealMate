@@ -129,7 +129,8 @@ class BoxRepo:
             is_chef_choice=record[13],
             is_spicy=record[14],
             has_cheese=record[15],
-            chef_first_name=record[16],
-            chef_last_name=record[17],
-            quantity=record[18],
+            price=record[16],
+            chef_first_name=record[17],
+            chef_last_name=record[18],
+            quantity=record[19],
         )
