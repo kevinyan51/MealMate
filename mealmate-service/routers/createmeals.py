@@ -19,3 +19,10 @@ def update_meal(
     repo: MealRepository = Depends(),
 ) -> Union[Error, MealOut]:
     return repo.update_meal(meal_id, meal)
+
+@router.delete("/meals/{meal_id}/", response_model=bool)
+def delete_meal(
+    meal_id: int,
+    repo: MealRepository = Depends(),
+) -> bool:
+    return repo.delete(meal_id)

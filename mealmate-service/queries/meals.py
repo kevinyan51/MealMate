@@ -27,6 +27,7 @@ class MealOut(BaseModel):
     has_cheese: Optional[bool]
     chef_first_name: Optional[str]
     chef_last_name: Optional[str]
+    price: Union[Optional[float], Optional[int]]
 
 
 class MealRepo:
