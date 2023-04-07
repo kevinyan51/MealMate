@@ -25,9 +25,9 @@ class MealOut(BaseModel):
     is_chef_choice: Optional[bool]
     is_spicy: Optional[bool]
     has_cheese: Optional[bool]
+    price: Union[Optional[float], Optional[int]]
     chef_first_name: Optional[str]
     chef_last_name: Optional[str]
-    price: Union[Optional[float], Optional[int]]
 
 
 class MealRepo:
@@ -89,6 +89,7 @@ class MealRepo:
             is_chef_choice=record[13],
             is_spicy=record[14],
             has_cheese=record[15],
-            chef_first_name=record[16],
-            chef_last_name=record[17],
+            price=record[16],
+            chef_first_name=record[17],
+            chef_last_name=record[18],
         )
