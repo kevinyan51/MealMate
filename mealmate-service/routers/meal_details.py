@@ -16,7 +16,7 @@ def get_one_meal(
     return meal
 
 
-@router.get("users/{chef_id}/meals/{meals_id}/", response_model= Optional[MealOut])
+@router.get("/users/{chef_id}/meals/{meals_id}/", response_model= Optional[MealOut])
 def get_one_meal_chef(
     meals_id: int,
     chef_id: int,
