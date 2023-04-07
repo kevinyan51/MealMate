@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from queries.pool import pool
-from typing import Union
+from typing import Union, Optional
 
 class MealIn(BaseModel):
     name: str
@@ -16,7 +16,8 @@ class MealIn(BaseModel):
     is_chef_choice: bool
     is_spicy: bool
     has_cheese: bool
-    price: int
+    price: Union[Optional[float], Optional[int]]
+
 
 class MealOut(BaseModel):
     id: int
@@ -33,28 +34,28 @@ class MealOut(BaseModel):
     is_chef_choice: bool
     is_spicy: bool
     has_cheese: bool
-    price: int
+    price: Union[Optional[float], Optional[int]]
 
 class Error(BaseModel):
     message:str
 
 class MealRepository:
-    def create(self, meals: MealIn) -> MealOut:
+    def create(self, meal: MealIn) -> MealOut:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
                         INSERT INTO meals
-                            (name, name2, picture_url, description, instructions, ingredients, chef_id, calories, is_keto, is_vegan, is_chef_choice, is_spicy, has_cheese)
+                            (name, name2, picture_url, description, instructions, ingredients, chef_id, calories, is_keto, is_vegan, is_chef_choice, is_spicy, has_cheese, price)
                         VALUES
-                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING id;
                         """,
-                        [meals.name, meals.name2, meals.picture_url, meals.description, meals.instructions, meals.ingredients, meals.chef_id, meals.calories, meals.is_keto, meals.is_vegan, meals.is_chef_choice, meals.is_spicy, meals.has_cheese]
+                        [meal.name, meal.name2, meal.picture_url, meal.description, meal.instructions, meal.ingredients, meal.chef_id, meal.calories, meal.is_keto, meal.is_vegan, meal.is_chef_choice, meal.is_spicy, meal.has_cheese, meal.price]
                     )
                     id = result.fetchone()[0]
-                    old_data = meals.dict()
+                    old_data = meal.dict()
                     return MealOut(id=id, **old_data)
         except Exception as e:
             print(
@@ -69,11 +70,11 @@ class MealRepository:
                     db.execute(
                         '''
                         UPDATE meals
-                        SET name = %s, name2 = %s, picture_url = %s, description = %s, instructions = %s, ingredients = %s, chef_id = %s, calories = %s, is_keto = %s, is_vegan = %s, is_chef_choice = %s, is_spicy = %s, has_cheese = %s
+                        SET name = %s, name2 = %s, picture_url = %s, description = %s, instructions = %s, ingredients = %s, chef_id = %s, calories = %s, is_keto = %s, is_vegan = %s, is_chef_choice = %s, is_spicy = %s, has_cheese = %s, price = %s
                         WHERE id = %s
                         ''',
                         [
-                        meal.name, meal.name2, meal.picture_url, meal.description, meal.instructions, meal.ingredients, meal.chef_id, meal.calories, meal.is_keto, meal.is_vegan, meal.is_chef_choice, meal.is_spicy, meal.has_cheese, meal_id
+                        meal.name, meal.name2, meal.picture_url, meal.description, meal.instructions, meal.ingredients, meal.chef_id, meal.calories, meal.is_keto, meal.is_vegan, meal.is_chef_choice, meal.is_spicy, meal.has_cheese, meal.price, meal_id
                         ]
                     )
                     return self.meal_in_to_out(meal_id, meal)
@@ -99,4 +100,4 @@ class MealRepository:
                     return True
         except Exception as e:
             print(e)
-            return False 
+            return False
