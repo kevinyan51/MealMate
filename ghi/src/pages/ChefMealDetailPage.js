@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MealDetail from '../components/MealDetail'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
@@ -7,6 +7,7 @@ const ChefMealDetailPage = () => {
 
   const id = useParams().mealId;
   const userId = useParams().userId;
+
   console.log(id)
   console.log(userId)
 
@@ -17,11 +18,14 @@ const ChefMealDetailPage = () => {
         };
 
   const deleteMeal = async (id) => {
-        fetch(`http://localhost:8080/api/meals/${id}/`,{
+        fetch(`http://localhost:8000/api/meals/${id}/`,{
             method: "DELETE"
             });
+
         navigate(`/meals`)
+        window.location.reload();
         };
+
 
 
   return (
