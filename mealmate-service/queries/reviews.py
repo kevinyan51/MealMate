@@ -28,7 +28,7 @@ class ReviewOut(BaseModel):
 class ReviewRepo:
     def get_all(self) -> Union[List[ReviewOut], Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -46,7 +46,7 @@ class ReviewRepo:
 
     def create(self, review: ReviewIn) -> Union[ReviewOut, Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -76,7 +76,7 @@ class ReviewRepo:
 
     def get_all_by_user(self, user_id: int) -> Union[List[ReviewOut], Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -95,7 +95,7 @@ class ReviewRepo:
 
     def get_all_by_meal(self, meal_id: int) -> Union[List[ReviewOut], Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -114,7 +114,7 @@ class ReviewRepo:
 
     def get_one(self, review_id: int) -> Union[ReviewOut, Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -137,7 +137,7 @@ class ReviewRepo:
         self, review_id: int, review: ReviewIn
     ) -> Union[ReviewOut, Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
@@ -172,7 +172,7 @@ class ReviewRepo:
 
     def delete(self, review_id: int) -> Union[ReviewOut, Error]:
         try:
-            with pool.getconn() as conn:
+            with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
