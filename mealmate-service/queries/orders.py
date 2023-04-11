@@ -7,7 +7,7 @@ from queries.boxes import Error
 
 class MealOutInOrder(BaseModel):
     order_id: int
-    status_id: int
+    order_status: str
     order_created_at: datetime
     order_updated_at: datetime
     subscriber_id: int
@@ -19,9 +19,14 @@ class MealOutInOrder(BaseModel):
     quantity: int
 
 
+class OrderIn(BaseModel):
+    order_id: int
+    order_status: str
+
+
 class OrderOut(BaseModel):
     order_id: int
-    status_id: int
+    order_status: str
     order_created_at: datetime
     order_updated_at: datetime
     subscriber_id: int
@@ -75,7 +80,7 @@ class OrderRepo:
                     cur.execute(
                         """
                         SELECT o.id
-                          , o.status_id
+                          , s.name
                           , o.created_at
                           , o.updated_at
                           , o.subscriber_id
@@ -88,6 +93,7 @@ class OrderRepo:
                         FROM orders o
                         JOIN order_meals om on o.id = om.order_id
                         JOIN meals m on om.meal_id = m.id
+                        JOIN statuses s on o.status_id = s.id
                         WHERE o.id = %s
                         """,
                         [order_id],
@@ -111,7 +117,7 @@ class OrderRepo:
                     cur.execute(
                         """
                         SELECT o.id
-                          , o.status_id
+                          , s.name
                           , o.created_at
                           , o.updated_at
                           , o.subscriber_id
@@ -124,6 +130,7 @@ class OrderRepo:
                         FROM orders o
                         JOIN order_meals om on o.id = om.order_id
                         JOIN meals m on om.meal_id = m.id
+                        JOIN statuses s on o.status_id = s.id
                         WHERE o.subscriber_id = %s
                         """,
                         [user_id],
@@ -148,7 +155,7 @@ class OrderRepo:
                     cur.execute(
                         """
                         SELECT o.id
-                          , o.status_id
+                          , s.name
                           , o.created_at
                           , o.updated_at
                           , o.subscriber_id
@@ -161,6 +168,7 @@ class OrderRepo:
                         FROM orders o
                         JOIN order_meals om on o.id = om.order_id
                         JOIN meals m on om.meal_id = m.id
+                        JOIN statuses s on o.status_id = s.id
                         """,
                     )
                     recs = cur.fetchall()
@@ -183,7 +191,7 @@ class OrderRepo:
                     cur.execute(
                         """
                       SELECT o.id
-                          , o.status_id
+                          , s.name
                           , o.created_at
                           , o.updated_at
                           , o.subscriber_id
@@ -196,6 +204,7 @@ class OrderRepo:
                         FROM orders o
                         JOIN order_meals om on o.id = om.order_id
                         JOIN meals m on om.meal_id = m.id
+                        JOIN statuses s on o.status_id = s.id
                         WHERE o.id = %s
                       """,
                         [order_id],
@@ -204,6 +213,79 @@ class OrderRepo:
                     lst_mealout = [
                         self.record_to_meal_out(rec) for rec in recs
                     ]
+                    lst_orderout = self.meal_out_to_order_out(lst_mealout)
+                    return lst_orderout[0]
+
+        except Exception as e:
+            print(
+                f"*********************************\nError Message:\n\n {e}\n*********************************"
+            )
+            return Error(message=str(e))
+
+    def update(self, order_id: int, order_in: OrderIn) -> Union[dict, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        UPDATE orders
+                        SET status_id = %s
+                        WHERE id = %s
+                        """,
+                        [order_in.status_id, order_id],
+                    )
+                    return {"message": "Order updated successfully"}
+                    # cur.execute(
+                    #     """
+                    #     SELECT o.id
+                    #       , s.name
+                    #       , o.created_at
+                    #       , o.updated_at
+                    #       , o.subscriber_id
+                    #       , m.id
+                    #       , m.name
+                    #       , m.name2
+                    #       , m.price
+                    #       , m.picture_url
+                    #       , om.quantity
+                    #     FROM orders o
+                    #     JOIN order_meals om on o.id = om.order_id
+                    #     JOIN meals m on om.meal_id = m.id
+                    #     JOIN statuses s on o.status_id = s.id
+                    #     WHERE o.id = %s
+                    #     """,
+                    #     [order_id],
+                    # )
+                    # recs = cur.fetchall()
+                    # lst_mealout = [
+                    #     self.record_to_meal_out(rec) for rec in recs
+                    # ]
+                    # lst_orderout = self.meal_out_to_order_out(lst_mealout)
+                    # return lst_orderout[0]
+
+        except Exception as e:
+            print(
+                f"*********************************\nError Message:\n\n {e}\n*********************************"
+            )
+            return Error(message=str(e))
+
+    def delete(self, order_id: int) -> Union[OrderOut, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        UPDATE orders
+                        SET status_id = 5
+                        WHERE id = %s
+                        RETURNING *
+                        """,
+                        [order_id],
+                    )
+                    rec = cur.fetchone()
+                    if rec is None:
+                        return Error(message="Order not found")
+                    lst_mealout = [self.record_to_meal_out(rec)]
                     lst_orderout = self.meal_out_to_order_out(lst_mealout)
                     return lst_orderout[0]
 
@@ -226,7 +308,7 @@ class OrderRepo:
             else:
                 dct_ords[order_id] = OrderOut(
                     order_id=order_id,
-                    status_id=mealout.status_id,
+                    order_status=mealout.order_status,
                     order_created_at=mealout.order_created_at,
                     order_updated_at=mealout.order_updated_at,
                     subscriber_id=mealout.subscriber_id,
@@ -239,7 +321,7 @@ class OrderRepo:
     def record_to_meal_out(self, record):
         return MealOutInOrder(
             order_id=record[0],
-            status_id=record[1],
+            order_status=record[1],
             order_created_at=record[2],
             order_updated_at=record[3],
             subscriber_id=record[4],

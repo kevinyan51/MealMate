@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional, Union
-from datetime import date
+from datetime import datetime
 from queries.pool import pool
 
 
@@ -10,11 +10,12 @@ class Error(BaseModel):
 
 class MealOut(BaseModel):
     meal_id: Optional[int]
+    status_id: Optional[int]
     chef_id: Optional[int]
     name: Optional[str]
     name2: Optional[str]
-    created_at: Optional[date]
-    updated_at: Optional[date]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
     picture_url: Optional[str]
     description: Optional[str]
     instructions: Optional[str]
@@ -74,22 +75,23 @@ class MealRepo:
     def record_to_mealout(self, record):
         return MealOut(
             meal_id=record[0],
-            chef_id=record[1],
-            name=record[2],
-            name2=record[3],
-            created_at=record[4],
-            updated_at=record[5],
-            picture_url=record[6],
-            description=record[7],
-            instructions=record[8],
-            ingredients=record[9],
-            calories=record[10],
-            is_keto=record[11],
-            is_vegan=record[12],
-            is_chef_choice=record[13],
-            is_spicy=record[14],
-            has_cheese=record[15],
-            price=record[16],
-            chef_first_name=record[17],
-            chef_last_name=record[18],
+            status_id=record[1],
+            chef_id=record[2],
+            name=record[3],
+            name2=record[4],
+            created_at=record[5],
+            updated_at=record[6],
+            picture_url=record[7],
+            description=record[8],
+            instructions=record[9],
+            ingredients=record[10],
+            calories=record[11],
+            is_keto=record[12],
+            is_vegan=record[13],
+            is_chef_choice=record[14],
+            is_spicy=record[15],
+            has_cheese=record[16],
+            price=record[17],
+            chef_first_name=record[18],
+            chef_last_name=record[19],
         )

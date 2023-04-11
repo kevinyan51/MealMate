@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import meals, meal_details, boxes, orders, createmeals
+from routers import meals, meal_details, boxes, orders, createmeals, reviews
 import datetime
 import os
 
@@ -30,6 +30,7 @@ def date_details():
     }
 
 
+app.include_router(reviews.router, prefix="/api", tags=["reviews"])
 app.include_router(meals.router, prefix="/api", tags=["meals"])
 app.include_router(meal_details.router, prefix="/api", tags=["meals"])
 app.include_router(boxes.router, prefix="/api", tags=["boxes"])

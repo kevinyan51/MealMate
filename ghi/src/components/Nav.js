@@ -30,6 +30,7 @@ const pagesToRoutes = {
   signup: '/signup',
   home: '/home',
   'my box': '/my-box',
+  meals: '/meals',
   'my orders': '/my-orders',
   'order detail': '/my-orders/1',
   'new meal': '/meals/new',
