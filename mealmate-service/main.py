@@ -30,9 +30,9 @@ def date_details():
     }
 
 
-app.include_router(reviews.router, prefix="/api", tags=["reviews"])
 app.include_router(meals.router, prefix="/api", tags=["meals"])
 app.include_router(meal_details.router, prefix="/api", tags=["meals"])
 app.include_router(boxes.router, prefix="/api", tags=["boxes"])
 app.include_router(orders.router, prefix="/api", tags=["orders"])
 app.include_router(createmeals.router, prefix="/api", tags=["chef"])
+app.include_router(reviews.router, prefix="/api", tags=["reviews"])
