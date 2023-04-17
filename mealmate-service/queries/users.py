@@ -1,41 +1,26 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from queries.pool import pool
 
 
-class AccountForm(BaseModel):
-    username: str
-    password: str
-
-
-class DuplicationAccountError(ValueError):
-    pass
-
-
 class UserIn(BaseModel):
-    role_id: int
     first_name: str
     last_name:str
     username: str
     email: str
     password: str
-    picture_url:str
+    picture_url: str
+    role_id: int
 
 
 class UserOut(BaseModel):
     id: int
-    role_id: int
     first_name: str
     last_name:str
     username: str
     email: str
-    hashed_password: str
     picture_url: str
-
-
-class UserOutLess(BaseModel):
-    id: int
-    username: str
+    role_id: int
 
 
 class UserOutWithPassword(UserOut):
@@ -46,104 +31,69 @@ class Error(BaseModel):
     message: str
 
 
-class Userlogout(BaseModel):
-    id: str
-    username: str
-    password: str
-    token: str
-
-
-class UserRepository:
+class UserQueries:
+    #####CREATE USER#####
     def create(
         self, user: UserIn, hashed_password: str
     ) -> UserOutWithPassword:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    existing_user = self.get(user.username)
-                    if existing_user:
-                        raise DuplicationAccountError(
-                            "User with this email already exists"
-                        )
                     result = db.execute(
                         """
-                            INSERT INTO users
-                                (role_id,
+                        INSERT INTO users
+                            (
                                 first_name,
                                 last_name,
                                 username,
                                 email,
                                 hashed_password,
-                                created_at,
-                                picture_url)
-                            VALUES
-                                (%s, %s, %s, %s, %s, %s, NOW(), %s)
-                            RETURNING id;
+                                picture_url,
+                                role_id
+                            )
+                        VALUES
+                            (%s, %s, %s, %s, %s, %s, %s)
+                        RETURNING id AS user_id;
                         """,
                         [
-                            user.role_id,
                             user.first_name,
                             user.last_name,
                             user.username,
                             user.email,
                             hashed_password,
-                            user.picture_url
+                            user.picture_url,
+                            user.role_id,
                         ],
                     )
-                    id = result.fetchone()[0]
+                    user_id = db.fetchone()[0]
                     old_data = user.dict()
+                    old_data["hashed_password"] = hashed_password
                     return UserOutWithPassword(
-                        id=id, **old_data, hashed_password=hashed_password
+                        user_id=user_id,
+                        **old_data,
                     )
-        except DuplicationAccountError as e:
-            raise e
-        except Exception:
-            return {"message": "Create did not work"}
-
-    def update(self, user_id: int, user: UserIn) -> UserOut:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    db.execute(
-                        """
-                            UPDATE users
-                            SET username = %s
-                                , email =  %s
-                                , hashed_password = %s
-                            WHERE id =  %s
-                        """,
-                        [user.username, user.email, user.password, user_id],
-                    )
-                    return self.user_into_out(user_id, user)
         except Exception as e:
-            print(e)
-            return {"User has not been updated"}
+            if "username" in str(e):
+                raise ValueError("Username already exists")
+            elif "email" in str(e):
+                raise ValueError("Email already exists")
 
-    def delete(self, user_id: int) -> bool:
+
+    #####GET USER FOR AUTHENTICATOR#####
+    def get(self, username: str) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                            DELETE FROM users
-                            WHERE id = %s
-                            RETURNING id
-                        """,
-                        [user_id],
-                    )
-                    id = result.fetchone()[0]
-                    return {f"User {id} deleted": True}
-        except Exception as e:
-            print(e)
-            return {"User deleted": False}
-
-    def get(self, username: str) -> UserOut:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    result = db.execute(
-                        """
-                        SELECT id, role_id, username, email, hashed_password
+                        SELECT id
+                            , first_name
+                            , last_name
+                            , username
+                            , email
+                            , hashed_password
+                            , picture_url
+                            , role_id
                         FROM users
                         WHERE username = %s
                         """,
@@ -152,43 +102,137 @@ class UserRepository:
                     record = result.fetchone()
                     if record is None:
                         return None
-                    user = UserOut(
-                        id=record[0],
-                        role_id=record[1],
-                        username=record[2],
-                        email=record[3],
-                        hashed_password=record[4],
-                    )
-                    return user
+                    return self.record_to_user_out(record)
         except Exception as e:
             print(e)
             return {"message": "Could not get user"}
 
-    def get_all(self) -> List[UserOut]:
+
+    #####GET USER BY ID#####
+    def get_user(self, user_id: int) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    db.execute(
+                    result = db.execute(
                         """
-                            SELECT id, role_id, username, email, hashed_password
-                            FROM users
-                        """
+                        SELECT id AS user_id
+                            , first_name
+                            , last_name
+                            , username
+                            , email
+                            , hashed_password
+                            , picture_url
+                            , role_id
+                        FROM users
+                        WHERE id = %s
+                        """,
+                        [user_id],
                     )
-                    result = db.fetchall()
-                    return [
-                        UserOut(
-                            id=id,
-                            role_id=role_id,
-                            username=username,
-                            email=email,
-                            hashed_password=hashed_password
-                        )
-                        for id, role_id, username, email, hashed_password in result
-                    ]
+                    record = result.fetchone()
+                    if record is None:
+                        return None
+                    return self.record_to_user_out(record)
         except Exception as e:
             print(e)
-            return {"Users not found"}
+            return {"message": "Could not get user"}
 
-    def user_into_out(self, id: id, user: UserOut):
-        old_data = user.dict()
-        return UserOut(id=id, **old_data)
+
+    #####GET ALL USERS#####
+    def get_all_users(self) -> List[UserOutWithPassword]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    result = cur.execute(
+                        """
+                        SELECT id AS user_id
+                            , first_name
+                            , last_name
+                            , username
+                            , email
+                            , hashed_password
+                            , picture_url
+                            , role_id
+                        FROM users
+                        ORDER BY id;
+                        """
+                    )
+                    return [self.record_to_user_out(record) for record in cur]
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all users"}
+
+
+    #####UPDATE USER#####
+    def update_user(
+        self, user_id: int, user: UserIn
+    ) -> Optional[UserOutWithPassword]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        UPDATE users
+                        SET first_name = %s
+                          , last_name = %s
+                          , username = %s
+                          , email = %s
+                          , picture_url = %s
+                        WHERE id = %s
+                        """,
+                        [
+                            user.first_name,
+                            user.last_name,
+                            user.username,
+                            user.email,
+                            user.picture_url,
+                            user_id,
+                        ],
+                    )
+
+                    return self.record_to_user_update(user_id, user)
+        except Exception as e:
+            print(e)
+            return {"message": "Could not update user"}
+
+
+    #####DELETE USER#####
+    def delete_user_profile(self, user_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        DELETE FROM users
+                        WHERE id = %s;
+                        """,
+                        [user_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return {"message": "Could not delete user"}
+
+    #####ENCODERS#####
+
+    def record_to_user_out(self, record):
+        return UserOutWithPassword(
+            user_id=record[0],
+            first_name=record[1],
+            last_name=record[2],
+            username=record[3],
+            email=record[4],
+            hashed_password=record[5],
+            picture_url=record[6],
+            role_id=record[7],
+        )
+
+    def record_to_user_update(self, record):
+        return UserOutWithPassword(
+            user_id=record[0],
+            first_name=record[1],
+            last_name=record[2],
+            username=record[3],
+            email=record[4],
+            picture_url=record[6],
+            role_id=record[7],
+        )

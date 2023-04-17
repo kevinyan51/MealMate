@@ -1,8 +1,13 @@
-from authenticator import authenticator
-from jwtdown_fastapi.authentication import Token
-from pydantic import BaseModel
 from fastapi import APIRouter, Response, Depends, status, Request, HTTPException
-from queries.users import DuplicationAccountError, UserIn, UserOut, UserRepository
+from jwtdown_fastapi.authentication import Token
+from authenticator import authenticator
+from pydantic import BaseModel
+from queries.users import UserIn, UserOut, UserQueries, UserOutWithPassword
+from typing import List
+
+
+class DuplicateAccountError(ValueError):
+    pass
 
 
 class AccountForm(BaseModel):
@@ -21,76 +26,100 @@ class HttpError(BaseModel):
 router = APIRouter()
 
 
-@router.get("/protected", response_model=bool, tags=["Users"])
-async def protected(
-    account_data: dict = Depends(authenticator.get_current_account_data),
-):
-    return True
-
-
-@router.get("/users/all", tags=["Users"])
-def get_all_users(
-    repo: UserRepository = Depends(),
-):
-    return repo.get_all()
-
-
-@router.get("/get/{username}", tags=["Users"])
-def get_user(
-    username: str,
-    repo: UserRepository = Depends(),
-) -> UserOut:
-    return repo.get(username)
-
-
-@router.post("/signup", tags=["Users"])
-async def create_account(
-    userdata: UserIn,
+#####USER SIGNUP#####
+@router.post("/users", response_model=AccountToken | HttpError)
+async def create_user(
+    info: UserIn,
     request: Request,
     response: Response,
-    repo: UserRepository = Depends(),
+    repo: UserQueries = Depends(),
 ):
-    hashed_password = authenticator.hash_password(userdata.password)
-    print(hashed_password)
-    print(userdata)
+    hashed_password = authenticator.hash_password(info.password)
     try:
-        account = repo.create(userdata, hashed_password)
-    except DuplicationAccountError:
+        account = repo.create(info, hashed_password)
+    except DuplicateAccountError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cannot create account",
+            detail="Cannot create user",
         )
-    form = AccountForm(username=userdata.username, password=userdata.password)
+    form = AccountForm(username=info.username, password=info.password)
     token = await authenticator.login(response, request, form, repo)
     return AccountToken(account=account, **token.dict())
 
 
-@router.put("/update/{user_id}", tags=["users"])
+#####TOKEN#####
+@router.get("/token", response_model=AccountToken | None)
+async def get_token(
+    request: Request,
+    account: UserIn = Depends(authenticator.try_get_current_account_data),
+) -> AccountToken | None:
+    if account and authenticator.cookie_name in request.cookies:
+        return {
+            "access_token": request.cookies[authenticator.cookie_name],
+            "type": "Bearer",
+            "account": account,
+        }
+
+
+#####GET USER#####
+@router.get("/users/{user_id}", response_model=UserOutWithPassword)
+def get_one_user(
+    user_id: int,
+    repo: UserQueries = Depends(),
+    account_data: dict = Depends(authenticator.get_current_account_data),
+) -> UserOutWithPassword:
+    try:
+        return repo.get_user(user_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot get user",
+        )
+
+
+#####UPDATE USER#####
+@router.put("/users/{user_id}", response_model=UserOut)
 def update_user(
     user_id: int,
     user: UserIn,
-    repo: UserRepository = Depends(),
+    repo: UserQueries = Depends(),
+    account_data: dict = Depends(authenticator.get_current_account_data),
 ) -> UserOut:
-    return repo.update(user_id, user)
+    try:
+        return repo.update_user_profile(user_id, user)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot update user",
+        )
 
 
-@router.delete("/delete/{user_id}", tags=["users"])
+#####DELETE USER#####
+@router.delete("/users/{user_id}", response_model=bool)
 def delete_user(
     user_id: int,
-    repo: UserRepository = Depends(),
+    repo: UserQueries = Depends(),
+    account_data: dict = Depends(authenticator.get_current_account_data),
+) -> bool:
+    try:
+        return repo.delete_user_profile(user_id)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot delete user",
+        )
+
+
+#####GET ALL USERS#####
+@router.get("/users", response_model=List[UserOutWithPassword])
+def get_all(
+    repo: UserQueries = Depends(),
+    account_data: dict = Depends(authenticator.get_current_account_data),
 ):
-    return repo.delete(user_id)
-
-
-@router.get("/token", response_model=AccountToken | None, tags=["users"])
-async def get_token(
-    request: Request,
-    account: UserOut = Depends(authenticator.try_get_current_account_data),
-) -> AccountToken | None:
-    if account and authenticator.cookie_name in request.cookies:
-
-        return {
-            "access_token": request.cookies[authenticator.cookie_name],
-            "token_type": "Bearer",
-            "account": account,
-        }
+    try:
+        return repo.get_all()
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot get all users",
+        )
