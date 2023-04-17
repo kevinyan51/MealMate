@@ -12,14 +12,15 @@ import MealEditPage from './pages/MealEditPage.js';
 import MealDetailPage from './pages/MealDetailPage.js';
 import OrderListPage from './pages/OrderListPage.js';
 import OrderDetailPage from './pages/OrderDetailPage.js';
+import { Box } from '@mui/material';
 
 const NavbarWrapper = () => {
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Nav />
-      <Outlet />
-      <div style={{ height: 56 }}></div>
-    </>
+      <Outlet style={{ flex: 1 }} />
+      {/* <div style={{ height: 56 }}></div> */}
+    </Box>
   );
 };
 

@@ -39,6 +39,8 @@ services:
       - "8000:8000"
     volumes:
       - ./mealmate-service:/app
+    depends_on:
+      - postgres
     environment:
       SIGNING_KEY: ${SIGNING_KEY}
       DATABASE_URL: postgresql://mealmates:password@postgres/mealmates
