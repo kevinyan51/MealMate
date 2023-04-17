@@ -86,6 +86,7 @@ class BoxRepo:
                         SELECT m.*
                         , u.first_name as chef_first_name
                         , u.last_name as chef_last_name
+                        , u.picture_url as chef_picture_url
                         , bm.quantity
                         FROM box_meals bm
                         JOIN meals m ON m.id = bm.meal_id
@@ -114,23 +115,25 @@ class BoxRepo:
     def record_to_mealout_w_qty(self, record):
         return MealOutWQty(
             meal_id=record[0],
-            chef_id=record[1],
-            name=record[2],
-            name2=record[3],
-            created_at=record[4],
-            updated_at=record[5],
-            picture_url=record[6],
-            description=record[7],
-            instructions=record[8],
-            ingredients=record[9],
-            calories=record[10],
-            is_keto=record[11],
-            is_vegan=record[12],
-            is_chef_choice=record[13],
-            is_spicy=record[14],
-            has_cheese=record[15],
-            price=record[16],
-            chef_first_name=record[17],
-            chef_last_name=record[18],
-            quantity=record[19],
+            status_id=record[1],
+            chef_id=record[2],
+            name=record[3],
+            name2=record[4],
+            created_at=record[5],
+            updated_at=record[6],
+            picture_url=record[7],
+            description=record[8],
+            instructions=record[9],
+            ingredients=record[10],
+            calories=record[11],
+            is_keto=record[12],
+            is_vegan=record[13],
+            is_chef_choice=record[14],
+            is_spicy=record[15],
+            has_cheese=record[16],
+            price=record[17],
+            chef_first_name=record[18],
+            chef_last_name=record[19],
+            chef_picture_url=record[20],
+            quantity=record[21],
         )

@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ChefMealDetailPage from './ChefMealDetailPage.js';
 import SubscriberMealDetailPage from './SubscriberMealDetailPage.js';
+import Review from '../components/Review.js';
 
 const MealDetailPage = () => {
+  const [role, setRole] = useState(2);
   return (
     <>
-      {/* if user role is chef, show this component */}
-      <ChefMealDetailPage />
-      {/* elif user role is subscriber, show this instead */}
-      <SubscriberMealDetailPage />
+      {role === 2 ? <ChefMealDetailPage /> : <SubscriberMealDetailPage />}
+      <Review />
     </>
   );
 };
