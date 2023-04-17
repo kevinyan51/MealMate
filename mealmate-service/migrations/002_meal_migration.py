@@ -4,6 +4,7 @@ steps = [
         """
         CREATE TABLE meals (
             id SERIAL NOT NULL PRIMARY KEY,
+            status_id INT REFERENCES statuses(id) NOT NULL default 6,
             chef_id int references users(id) NOT NULL,
             name VARCHAR(100) NOT NULL default 'Un-named Meal',
             name2 VARCHAR(100) NOT NULL default 'with Plain Bread or Rice',

@@ -38,6 +38,8 @@ services:
       - "8000:8000"
     volumes:
       - ./mealmate-service:/app
+    depends_on:
+      - postgres
     environment:
       SIGNING_KEY: cRfTjWnZr4u7x!A%D*G-KaPdSgVkXp2s
       WAIT_HOSTS: postgres:5432

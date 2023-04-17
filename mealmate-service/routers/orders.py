@@ -52,3 +52,19 @@ def get_one_order(
     if result is None:
         resp.status_code = 500
     return result
+
+
+@router.get(
+    "/users/{user_id}/orders/meals/{meal_id}/",
+    response_model=Union[bool, Error],
+)
+def check_if_subscriber_ordered_meal(
+    subscriber_id: int,
+    meal_id: int,
+    resp: Response,
+    repo: OrderRepo = Depends(),
+):
+    result = repo.if_ordered_meal(subscriber_id, meal_id)
+    if result is None:
+        resp.status_code = 500
+    return result

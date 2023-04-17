@@ -30,6 +30,7 @@ const pagesToRoutes = {
   signup: '/signup',
   home: '/home',
   'my box': '/my-box',
+  meals: '/meals',
   'my orders': '/my-orders',
   'order detail': '/my-orders/1',
   'new meal': '/meals/new',
@@ -54,7 +55,7 @@ const Nav = () => {
   const navigate = useNavigate();
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" sx={{ height: 64 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <RestaurantIcon sx={{ display: 'flex', mr: 1 }} />
