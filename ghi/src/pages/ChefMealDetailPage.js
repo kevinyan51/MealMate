@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import MealDetail from '../components/MealDetail'
 import { useNavigate, useParams } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
+
 
 const ChefMealDetailPage = () => {
 
