@@ -4,11 +4,33 @@ import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import router from './App';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { COLORS } from './utils/constants';
+import myFonts from './theme/theme';
+
+const customTheme = createTheme({
+  palette: {
+    primary: {
+      main: COLORS.primary,
+      background: COLORS.backgroundLight,
+    },
+    secondary: {
+      main: COLORS.secondary,
+    },
+    background: {
+      default: COLORS.backgroundLight,
+      secondary: COLORS.backgroundLight,
+    },
+  },
+  ...myFonts,
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <RouterProvider router={router} />
+  <ThemeProvider theme={customTheme}>
+    <RouterProvider router={router} />
+  </ThemeProvider>
   // </React.StrictMode>
 );
 

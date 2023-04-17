@@ -29,6 +29,7 @@ class MealOut(BaseModel):
     price: Union[Optional[float], Optional[int]]
     chef_first_name: Optional[str]
     chef_last_name: Optional[str]
+    chef_picture_url: Optional[str]
 
 
 class MealRepo:
@@ -38,7 +39,7 @@ class MealRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT m.*, u.first_name, u.last_name
+                        SELECT m.*, u.first_name, u.last_name, u.picture_url
                         FROM meals m
                         JOIN users u on m.chef_id = u.id;
                         """
@@ -57,7 +58,7 @@ class MealRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT m.*, u.first_name, u.last_name
+                        SELECT m.*, u.first_name, u.last_name, u.picture_url
                         FROM meals m
                         JOIN users u on m.chef_id = u.id
                         WHERE m.chef_id = %s
@@ -94,4 +95,5 @@ class MealRepo:
             price=record[17],
             chef_first_name=record[18],
             chef_last_name=record[19],
+            chef_picture_url=record[20],
         )

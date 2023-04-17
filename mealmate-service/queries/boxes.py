@@ -86,6 +86,7 @@ class BoxRepo:
                         SELECT m.*
                         , u.first_name as chef_first_name
                         , u.last_name as chef_last_name
+                        , u.picture_url as chef_picture_url
                         , bm.quantity
                         FROM box_meals bm
                         JOIN meals m ON m.id = bm.meal_id
@@ -133,5 +134,6 @@ class BoxRepo:
             price=record[17],
             chef_first_name=record[18],
             chef_last_name=record[19],
-            quantity=record[20],
+            chef_picture_url=record[20],
+            quantity=record[21],
         )

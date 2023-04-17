@@ -8,6 +8,7 @@ from datetime import date
 class Error(BaseModel):
     message: str
 
+
 class MealOut(BaseModel):
     id: int
     chef_id: int
@@ -28,6 +29,7 @@ class MealOut(BaseModel):
     price: float
     first_name: str
     last_name: str
+    chef_picture_url: str
 
 
 class MealDetailsRepository:
@@ -56,15 +58,16 @@ class MealDetailsRepository:
                             , price
                             , first_name
                             , last_name
+                            , users.picture_url
                         FROM meals
                         LEFT JOIN users
                         ON meals.chef_id = users.id
                         WHERE meals.id = %s
                         """,
-                        [meals_id]
+                        [meals_id],
                     )
                     record = result.fetchone()
-                    print("record *************",record)
+                    print("record *************", record)
                     if record is None:
                         return None
                     return self.record_to_meal_out(record)
@@ -92,16 +95,15 @@ class MealDetailsRepository:
             has_cheese=record[15],
             price=record[16],
             first_name=record[17],
-            last_name=record[18]
+            last_name=record[18],
+            chef_picture_url=record[19],
         )
 
 
-
-
-
-
 class ChefMealDetailsRepository:
-    def get_one_meal_chef(self, meals_id: int, chef_id: int) -> Optional[MealOut]:
+    def get_one_meal_chef(
+        self, meals_id: int, chef_id: int
+    ) -> Optional[MealOut]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
@@ -126,15 +128,16 @@ class ChefMealDetailsRepository:
                             , price
                             , first_name
                             , last_name
+                            , users.picture_url
                         FROM meals
                         LEFT JOIN users
                         ON meals.chef_id = users.id
                         WHERE meals.id = %s AND meals.chef_id = %s
                         """,
-                        [meals_id, chef_id]
+                        [meals_id, chef_id],
                     )
                     record = result.fetchone()
-                    print("record *************",record)
+                    print("record *************", record)
                     if record is None:
                         return None
                     return self.chef_record_to_meal_out(record)
@@ -162,5 +165,6 @@ class ChefMealDetailsRepository:
             has_cheese=record[15],
             price=record[16],
             first_name=record[17],
-            last_name=record[18]
+            last_name=record[18],
+            chef_picture_url=record[19],
         )

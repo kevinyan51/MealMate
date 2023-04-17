@@ -300,7 +300,7 @@ class OrderRepo:
         for mealout in lst_mealout:
             order_id = mealout.order_id
             if dct_ords.get(order_id):
-                dct_ords[order_id].num_meals += 1
+                dct_ords[order_id].num_meals += mealout.quantity
                 dct_ords[order_id].total_price += (
                     mealout.meal_price * mealout.quantity
                 )
@@ -312,11 +312,34 @@ class OrderRepo:
                     order_created_at=mealout.order_created_at,
                     order_updated_at=mealout.order_updated_at,
                     subscriber_id=mealout.subscriber_id,
-                    num_meals=1,
+                    num_meals=mealout.quantity,
                     total_price=mealout.meal_price * mealout.quantity,
                     meals=[mealout],
                 )
         return list(dct_ords.values())
+
+    def if_ordered_meal(
+        self, meal_id: int, user_id: int
+    ) -> Union[bool, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT * 
+                        FROM order_meals om
+                        JOIN orders o on om.order_id = o.id
+                        WHERE meal_id = %s AND subscriber_id = %s
+                        """,
+                        (meal_id, user_id),
+                    )
+                    rec = cur.fetchone()
+                    if rec is None:
+                        return False
+                    return True
+
+        except Exception as e:
+            return Error(message=str(e))
 
     def record_to_meal_out(self, record):
         return MealOutInOrder(

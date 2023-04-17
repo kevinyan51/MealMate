@@ -23,6 +23,7 @@ class ReviewOut(BaseModel):
     comment: str
     reviewer_first_name: str
     reviewer_last_name: str
+    picture_url: str
 
 
 class ReviewRepo:
@@ -32,7 +33,7 @@ class ReviewRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name 
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r 
                         JOIN users u ON r.subscriber_id = u.id 
                         WHERE r.status_id = 6
@@ -80,7 +81,7 @@ class ReviewRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.subscriber_id = %s
@@ -99,7 +100,7 @@ class ReviewRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name 
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.meal_id = %s
@@ -118,7 +119,7 @@ class ReviewRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name 
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.id = %s
@@ -157,7 +158,7 @@ class ReviewRepo:
                     review_id = cur.fetchone()[0]
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.id = %s
@@ -186,7 +187,7 @@ class ReviewRepo:
                     review_id = cur.fetchone()[0]
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url 
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.id = %s
@@ -213,4 +214,5 @@ class ReviewRepo:
             comment=rec[7],
             reviewer_first_name=rec[8],
             reviewer_last_name=rec[9],
+            picture_url=rec[10],
         )

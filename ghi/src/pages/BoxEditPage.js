@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { COLORS } from '../utils/constants';
+import Modal from '@mui/material/Modal';
+import { Card as BCard, Modal as BModal } from 'react-bootstrap';
+import {
+  faSeedling,
+  faPepperHot,
+  faCheese,
+  faTrophy,
+  faListAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import MealCard from '../components/MealCard';
 
 const BoxEditPage = () => {
   const [box, setBox] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   const getAllMeals = async () => {
     const url = 'http://localhost:8000/api/meals/';
@@ -19,7 +36,7 @@ const BoxEditPage = () => {
     meals = meals.map((meal) => {
       meal = { ...meal };
       if (meal.meal_id === mealId) {
-        meal.quantity += 1;
+        if (meal.quantity < 10) meal.quantity += 1;
       }
       return meal;
     });
@@ -54,6 +71,7 @@ const BoxEditPage = () => {
   useEffect(() => {
     getUserBox();
   }, []);
+  const [selectedMeal, setSelectedMeal] = useState(null);
 
   const getOneBox = async () => {
     const url = `http://localhost:8000/api/boxes/${boxId || 1}/`;
@@ -95,35 +113,132 @@ const BoxEditPage = () => {
   }, [boxId]);
 
   return (
-    <div>
-      {box?.meals?.map((meal) => {
-        return (
-          <div
-            key={meal.meal_id}
-            style={{ border: '1px solid', margin: 10, padding: 10 }}
-          >
-            <div>{meal.name}</div>
-            <img src={meal.picture_url} alt={meal.name} width={200} />
-            <div style={{ display: 'flex', marginTop: 10 }}>
-              <button onClick={() => handleAdd(meal.meal_id)}>add</button>
-              <div style={{ marginLeft: 10, marginRight: 10 }}>
-                {meal.quantity || 0}
-              </div>
-              <button
-                disabled={meal.quantity <= 0}
-                onClick={() => handleRemove(meal.meal_id)}
-              >
-                remove
-              </button>
+    <Box p={4}>
+      <Box mb={2} mr={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button variant="outlined" onClick={saveBox} sx={{ mr: 2 }}>
+          save box
+        </Button>
+        <Button variant="contained" sx={{ color: 'white' }}>
+          order now
+        </Button>
+      </Box>
+      <Grid container spacing={2}>
+        {box?.meals?.map((meal) => {
+          return (
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={3} key={meal.meal_id}>
+              <MealCard
+                meal={meal}
+                handleAdd={handleAdd}
+                handleRemove={handleRemove}
+                setSelectedMeal={setSelectedMeal}
+                setShowModal={setShowModal}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+      <Modal open={showModal} onClose={() => setShowModal(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            backgroundColor: 'transparent',
+            boxShadow: 24,
+            p: 4,
+            backgroundColor: 'white',
+            opacity: 0.95,
+            maxHeight: '90vh',
+            overflow: 'scroll',
+          }}
+        >
+          <BModal.Header>
+            <BModal.Title>{selectedMeal?.name}</BModal.Title>
+          </BModal.Header>
+          <BModal.Body>
+            <BCard.Img
+              src={selectedMeal?.picture_url}
+              style={{ width: '100%' }}
+              alt="selectedMeal?"
+            />
+            <div className="my-4">
+              <h4 className="mb-3">Description</h4>
+              <p className="fs-5">{selectedMeal?.description}</p>
             </div>
-          </div>
-        );
-      })}
-      <div>
-        <button onClick={saveBox}>save box</button>
-        <button>order now</button>
-      </div>
-    </div>
+            <div className="my-4">
+              <h4 className="mb-3">Ingredients</h4>
+              <ul className="list-group list-group-flush">
+                {selectedMeal?.ingredients}
+              </ul>
+            </div>
+            <div className="my-4">
+              <h4 className="mb-3">Meal Details</h4>
+              <ul className="list-group list-group-flush">
+                {selectedMeal?.calories && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faListAlt}
+                      className="text-secondary me-1"
+                    />
+                    {selectedMeal?.calories} cal
+                  </li>
+                )}
+                {selectedMeal?.is_keto && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faSeedling}
+                      className="text-success me-1"
+                    />
+                    Keto
+                  </li>
+                )}
+                {selectedMeal?.is_vegan && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faSeedling}
+                      className="text-success me-1"
+                    />
+                    Vegan
+                  </li>
+                )}
+                {selectedMeal?.is_chef_choice && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faTrophy}
+                      className="text-warning me-1"
+                    />
+                    Chef's Choice
+                  </li>
+                )}
+                {selectedMeal?.is_spicy && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faPepperHot}
+                      className="text-danger me-1"
+                    />
+                    Spicy
+                  </li>
+                )}
+                {selectedMeal?.has_cheese && (
+                  <li className="list-group-item">
+                    <FontAwesomeIcon
+                      icon={faCheese}
+                      className="text-info me-1"
+                    />
+                    Cheese
+                  </li>
+                )}
+              </ul>
+            </div>
+          </BModal.Body>
+          <BModal.Footer>
+            <small className="text-muted">${selectedMeal?.price}</small>
+          </BModal.Footer>
+        </Box>
+      </Modal>
+    </Box>
   );
 };
 
