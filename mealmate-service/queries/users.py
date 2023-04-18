@@ -39,7 +39,7 @@ class UserQueries:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    result = db.execute(
+                    db.execute(
                         """
                         INSERT INTO users
                             (
@@ -53,7 +53,7 @@ class UserQueries:
                             )
                         VALUES
                             (%s, %s, %s, %s, %s, %s, %s)
-                        RETURNING id AS user_id;
+                        RETURNING id;
                         """,
                         [
                             user.first_name,
@@ -65,18 +65,20 @@ class UserQueries:
                             user.role_id,
                         ],
                     )
-                    user_id = db.fetchone()[0]
+                    id = db.fetchone()[0]
                     old_data = user.dict()
                     old_data["hashed_password"] = hashed_password
                     return UserOutWithPassword(
-                        user_id=user_id,
+                        id=id,
                         **old_data,
                     )
         except Exception as e:
             if "username" in str(e):
-                raise ValueError("Username already exists")
+                raise ValueError("Cannot use username")
             elif "email" in str(e):
-                raise ValueError("Email already exists")
+                raise ValueError("Cannot use email")
+            else:
+                raise e
 
 
     #####GET USER FOR AUTHENTICATOR#####
@@ -105,17 +107,17 @@ class UserQueries:
                     return self.record_to_user_out(record)
         except Exception as e:
             print(e)
-            return {"message": "Could not get user"}
+            return {"message": "Cannot get user"}
 
 
     #####GET USER BY ID#####
-    def get_user(self, user_id: int) -> Optional[UserOutWithPassword]:
+    def get_user(self, id: int) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT id AS user_id
+                        SELECT id
                             , first_name
                             , last_name
                             , username
@@ -126,7 +128,7 @@ class UserQueries:
                         FROM users
                         WHERE id = %s
                         """,
-                        [user_id],
+                        [id],
                     )
                     record = result.fetchone()
                     if record is None:
@@ -134,7 +136,7 @@ class UserQueries:
                     return self.record_to_user_out(record)
         except Exception as e:
             print(e)
-            return {"message": "Could not get user"}
+            return {"message": "Cannot get user"}
 
 
     #####GET ALL USERS#####
@@ -144,7 +146,7 @@ class UserQueries:
                 with conn.cursor() as cur:
                     result = cur.execute(
                         """
-                        SELECT id AS user_id
+                        SELECT id
                             , first_name
                             , last_name
                             , username
@@ -159,17 +161,17 @@ class UserQueries:
                     return [self.record_to_user_out(record) for record in cur]
         except Exception as e:
             print(e)
-            return {"message": "Could not get all users"}
+            return {"message": "Cannot get all users"}
 
 
     #####UPDATE USER#####
     def update_user(
-        self, user_id: int, user: UserIn
+        self, id: int, user: UserIn
     ) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    result = db.execute(
+                    db.execute(
                         """
                         UPDATE users
                         SET first_name = %s
@@ -178,6 +180,7 @@ class UserQueries:
                           , email = %s
                           , picture_url = %s
                         WHERE id = %s
+                        RETURNING id, first_name, last_name, username, email, hashed_password, picture_url, role_id
                         """,
                         [
                             user.first_name,
@@ -185,38 +188,39 @@ class UserQueries:
                             user.username,
                             user.email,
                             user.picture_url,
-                            user_id,
+                            id,
                         ],
                     )
-
-                    return self.record_to_user_update(user_id, user)
+                    record = db.fetchone()
+                    print(record)
+                    return self.record_to_user_update(record)
         except Exception as e:
             print(e)
-            return {"message": "Could not update user"}
+            return {"message": "Cannot update user"}
 
 
     #####DELETE USER#####
-    def delete_user_profile(self, user_id: int) -> bool:
+    def delete_user(self, id: int) -> bool:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    result = db.execute(
+                    db.execute(
                         """
                         DELETE FROM users
                         WHERE id = %s;
                         """,
-                        [user_id],
+                        [id],
                     )
                     return True
         except Exception as e:
             print(e)
-            return {"message": "Could not delete user"}
+            return {"message": "Cannot delete user"}
 
     #####ENCODERS#####
 
     def record_to_user_out(self, record):
         return UserOutWithPassword(
-            user_id=record[0],
+            id=record[0],
             first_name=record[1],
             last_name=record[2],
             username=record[3],
@@ -228,11 +232,12 @@ class UserQueries:
 
     def record_to_user_update(self, record):
         return UserOutWithPassword(
-            user_id=record[0],
+            id=record[0],
             first_name=record[1],
             last_name=record[2],
             username=record[3],
             email=record[4],
+            hashed_password=record[5],
             picture_url=record[6],
             role_id=record[7],
         )

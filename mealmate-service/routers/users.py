@@ -43,6 +43,7 @@ async def create_user(
             detail="Cannot create user",
         )
     form = AccountForm(username=info.username, password=info.password)
+    print(account)
     token = await authenticator.login(response, request, form, repo)
     return AccountToken(account=account, **token.dict())
 
@@ -86,7 +87,7 @@ def update_user(
     account_data: dict = Depends(authenticator.get_current_account_data),
 ) -> UserOut:
     try:
-        return repo.update_user_profile(user_id, user)
+        return repo.update_user(user_id, user)
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -102,7 +103,7 @@ def delete_user(
     account_data: dict = Depends(authenticator.get_current_account_data),
 ) -> bool:
     try:
-        return repo.delete_user_profile(user_id)
+        return repo.delete_user(user_id)
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -112,12 +113,12 @@ def delete_user(
 
 #####GET ALL USERS#####
 @router.get("/users", response_model=List[UserOutWithPassword])
-def get_all(
+def get_all_users(
     repo: UserQueries = Depends(),
     account_data: dict = Depends(authenticator.get_current_account_data),
 ):
     try:
-        return repo.get_all()
+        return repo.get_all_users()
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
