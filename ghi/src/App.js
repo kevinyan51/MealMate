@@ -14,6 +14,9 @@ import OrderListPage from './pages/OrderListPage.js';
 import OrderDetailPage from './pages/OrderDetailPage.js';
 import { Box } from '@mui/material';
 
+const domain = /https:\/\/[^/]+/;
+const basename = process.env.PUBLIC_URL.replace(domain, '');
+
 const NavbarWrapper = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -63,7 +66,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: process.env.PUBLIC_URL || '/' }
+  { basename }
 );
 
 export default router;

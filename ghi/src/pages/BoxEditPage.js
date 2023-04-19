@@ -21,7 +21,7 @@ const BoxEditPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const getAllMeals = async () => {
-    const url = 'http://localhost:8000/api/meals/';
+    const url = `${REACT_APP_MEALMATE_API_HOST}/api/meals/`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
@@ -60,7 +60,9 @@ const BoxEditPage = () => {
 
   const getUserBox = async () => {
     if (!userId) setUserId(1);
-    const url = `http://localhost:8000/api/users/${userId || 1}/box_id/`;
+    const url = `${REACT_APP_MEALMATE_API_HOST}/api/users/${
+      userId || 1
+    }/box_id/`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
@@ -74,7 +76,7 @@ const BoxEditPage = () => {
   const [selectedMeal, setSelectedMeal] = useState(null);
 
   const getOneBox = async () => {
-    const url = `http://localhost:8000/api/boxes/${boxId || 1}/`;
+    const url = `${REACT_APP_MEALMATE_API_HOST}/api/boxes/${boxId || 1}/`;
     const response = await fetch(url);
     const allMeals = await getAllMeals();
 
@@ -93,7 +95,7 @@ const BoxEditPage = () => {
     }
   };
   const saveBox = async () => {
-    const url = `http://localhost:8000/api/boxes/${boxId}/`;
+    const url = `${REACT_APP_MEALMATE_API_HOST}/api/boxes/${boxId}/`;
     let meals = [...box.meals.filter((meal) => meal.quantity > 0)];
     const response = await fetch(url, {
       method: 'PUT',
