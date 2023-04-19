@@ -34,7 +34,7 @@ build-front-end-job:
     # You need to substitute in your real values for
     # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
     CI: 'false'
-    # BEWARE OF ENDING SLASHES
+    # BEWARE OF ENDING SLASHES (Remove it)
     PUBLIC_URL: https://culinarycoders.gitlab.io/mealmate
     REACT_APP_MEALMATE_API_HOST: https://mealmate-api.dec-pt-15.mod3projects.com
   script:

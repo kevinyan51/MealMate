@@ -24,44 +24,47 @@ const NavbarWrapper = () => {
   );
 };
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: '', element: <LandingPage /> },
-      { path: 'login', element: <LoginPage /> },
-      { path: 'signup', element: <SignupPage /> },
-      { path: 'home', element: <HomePage /> },
-    ],
-  },
-  {
-    path: '/my-box',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [{ path: '', element: <BoxEditPage /> }],
-  },
-  {
-    path: '/my-orders',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: '', element: <OrderListPage /> },
-      { path: ':orderId', element: <OrderDetailPage /> },
-    ],
-  },
-  {
-    path: '/meals',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: 'new', element: <MealCreatePage /> },
-      { path: ':mealId', element: <MealDetailPage /> },
-      { path: ':mealId/edit', element: <MealEditPage /> },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: '', element: <LandingPage /> },
+        { path: 'login', element: <LoginPage /> },
+        { path: 'signup', element: <SignupPage /> },
+        { path: 'home', element: <HomePage /> },
+      ],
+    },
+    {
+      path: '/my-box',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [{ path: '', element: <BoxEditPage /> }],
+    },
+    {
+      path: '/my-orders',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: '', element: <OrderListPage /> },
+        { path: ':orderId', element: <OrderDetailPage /> },
+      ],
+    },
+    {
+      path: '/meals',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: 'new', element: <MealCreatePage /> },
+        { path: ':mealId', element: <MealDetailPage /> },
+        { path: ':mealId/edit', element: <MealEditPage /> },
+      ],
+    },
+  ],
+  { basename: process.env.PUBLIC_URL || '/' }
+);
 
 export default router;
 
