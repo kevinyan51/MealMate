@@ -70,7 +70,7 @@ export default router;
 
 // function App() {
 //   return (
-//     <BrowserRouter>
+//     <BrowserRouter basename={process.env.PUBLIC_URL}>
 //       <Nav />
 //       <div style={{ height: 56 }}></div>
 //       <div className="container">
