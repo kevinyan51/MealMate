@@ -24,9 +24,9 @@ api-unit-test-job:
 
 # Build the React/JavaScript front-end
 build-front-end-job:
-  rules:
+rules:
     # Only run if pushing to the main branch
-    - if: $CI_COMMIT_BRANCH == jamie-feature
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   stage: build
   image: node:lts-bullseye
   needs:
@@ -37,7 +37,7 @@ build-front-end-job:
     # You need to substitute in your real values for
     # GROUP_NAME, PROJECT_NAME, & WEBSERVICE_NAME below.
     PUBLIC_URL: https://culinarycoders.gitlab.io/mealmate/
-    REACT_APP_MEALMATE_API_HOST: https://WEBSERVICE_NAME.onrender.com
+    # REACT_APP_MEALMATE_API_HOST: https://WEBSERVICE_NAME.onrender.com
   script:
     - cd ghi
     - npm install
@@ -51,7 +51,7 @@ build-front-end-job:
 pages:
   stage: deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == jamie-feature
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   dependencies:
     - build-front-end-job
   needs:
