@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Response
-from typing import List, Optional, Union
+from typing import List, Union
 from queries.meals import Error, MealOut, MealRepo
 
 

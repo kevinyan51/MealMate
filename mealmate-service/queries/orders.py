@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional, Union
+from typing import List, Union
 from datetime import datetime
 from queries.pool import pool
 from queries.boxes import Error
@@ -46,11 +46,15 @@ class OrderRepo:
                         (subscriber_id, status_id)
                         VALUES
                         (
-	                        (SELECT b.subscriber_id FROM boxes b JOIN users u on b.subscriber_id = u.id WHERE b.id = %s LIMIT 1)
-	                        , 1
-                        ) 
-                        RETURNING id
-                        ;
+                            (
+                                SELECT b.subscriber_id FROM boxes b
+                                JOIN users u on b.subscriber_id = u.id
+                                WHERE b.id = %s
+                                LIMIT 1
+                            )
+                            , 1
+                        )
+                        RETURNING id;
                         """,
                         [box_id],
                     )
@@ -105,9 +109,7 @@ class OrderRepo:
                     lst_orderout = self.meal_out_to_order_out(lst_mealout)
                     return lst_orderout[0]
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def get_all_by_user(self, user_id: int) -> Union[List[OrderOut], Error]:
@@ -143,9 +145,7 @@ class OrderRepo:
                     return lst_orderout
 
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def get_all(self) -> Union[List[OrderOut], Error]:
@@ -179,9 +179,7 @@ class OrderRepo:
                     return lst_orderout
 
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def get_one(self, order_id: int) -> Union[OrderOut, Error]:
@@ -217,9 +215,7 @@ class OrderRepo:
                     return lst_orderout[0]
 
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def update(self, order_id: int, order_in: OrderIn) -> Union[dict, Error]:
@@ -264,9 +260,7 @@ class OrderRepo:
                     # return lst_orderout[0]
 
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def delete(self, order_id: int) -> Union[OrderOut, Error]:
@@ -290,9 +284,7 @@ class OrderRepo:
                     return lst_orderout[0]
 
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def meal_out_to_order_out(self, lst_mealout):
@@ -326,7 +318,7 @@ class OrderRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT * 
+                        SELECT *
                         FROM order_meals om
                         JOIN orders o on om.order_id = o.id
                         WHERE meal_id = %s AND subscriber_id = %s

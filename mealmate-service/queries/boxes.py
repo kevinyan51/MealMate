@@ -32,9 +32,9 @@ class BoxRepo:
                     rec = cur.fetchone()
                     return rec[0]
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(
+            # f"******\nError Message:\n\n {e}\n******"
+            # )
             return Error(message=str(e))
 
     def update(self, box_id: int, box: BoxInOut) -> Union[BoxInOut, Error]:
@@ -58,9 +58,7 @@ class BoxRepo:
                         )
                     return self.get_one(box_id)
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def get_one(self, box_id: int) -> Union[BoxInOut, Error]:
@@ -69,7 +67,9 @@ class BoxRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        SELECT u.first_name as subscriber_first_name, u.last_name as subscriber_last_name, u.id as subscriber_id
+                        SELECT u.first_name as subscriber_first_name
+                            , u.last_name as subscriber_last_name
+                            , u.id as subscriber_id
                         FROM boxes b
                         JOIN users u on u.id = b.subscriber_id
                         WHERE b.id = %s
@@ -107,9 +107,9 @@ class BoxRepo:
                         ],
                     )
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(
+            # f"******\nError Message:\n\n {e}\n******"
+            # )
             return Error(message=str(e))
 
     def record_to_mealout_w_qty(self, record):
