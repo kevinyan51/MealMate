@@ -47,9 +47,7 @@ class MealRepo:
                     recs = cur.fetchall()
                     return [self.record_to_mealout(rec) for rec in recs]
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def get_all_by_user(self, user_id: int) -> Union[List[MealOut], Error]:
@@ -68,9 +66,7 @@ class MealRepo:
                     recs = cur.fetchall()
                     return [self.record_to_mealout(rec) for rec in recs]
         except Exception as e:
-            print(
-                f"*********************************\nError Message:\n\n {e}\n*********************************"
-            )
+            # print(f"******\nError Message:\n\n {e}\n******")
             return Error(message=str(e))
 
     def record_to_mealout(self, record):

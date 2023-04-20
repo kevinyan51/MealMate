@@ -34,8 +34,8 @@ class ReviewRepo:
                     cur.execute(
                         """
                         SELECT r.*, u.first_name, u.last_name, u.picture_url
-                        FROM reviews r 
-                        JOIN users u ON r.subscriber_id = u.id 
+                        FROM reviews r
+                        JOIN users u ON r.subscriber_id = u.id
                         WHERE r.status_id = 6
                         """
                     )
@@ -51,8 +51,13 @@ class ReviewRepo:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        INSERT INTO reviews (subscriber_id, meal_id, rating, comment)
-                        VALUES (%s, %s, %s, %s) 
+                        INSERT INTO reviews (
+                            subscriber_id
+                            , meal_id
+                            , rating
+                            , comment
+                        )
+                        VALUES (%s, %s, %s, %s)
                         RETURNING id
                         """,
                         (
@@ -187,7 +192,7 @@ class ReviewRepo:
                     review_id = cur.fetchone()[0]
                     cur.execute(
                         """
-                        SELECT r.*, u.first_name, u.last_name, u.picture_url 
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
                         FROM reviews r
                         JOIN users u ON r.subscriber_id = u.id
                         WHERE r.id = %s

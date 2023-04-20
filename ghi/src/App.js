@@ -14,6 +14,9 @@ import OrderListPage from './pages/OrderListPage.js';
 import OrderDetailPage from './pages/OrderDetailPage.js';
 import { Box } from '@mui/material';
 
+const domain = /https:\/\/[^/]+/;
+const basename = process.env.PUBLIC_URL.replace(domain, '');
+
 const NavbarWrapper = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -24,50 +27,53 @@ const NavbarWrapper = () => {
   );
 };
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: '', element: <LandingPage /> },
-      { path: 'login', element: <LoginPage /> },
-      { path: 'signup', element: <SignupPage /> },
-      { path: 'home', element: <HomePage /> },
-    ],
-  },
-  {
-    path: '/my-box',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [{ path: '', element: <BoxEditPage /> }],
-  },
-  {
-    path: '/my-orders',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: '', element: <OrderListPage /> },
-      { path: ':orderId', element: <OrderDetailPage /> },
-    ],
-  },
-  {
-    path: '/meals',
-    element: <NavbarWrapper />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: 'new', element: <MealCreatePage /> },
-      { path: ':mealId', element: <MealDetailPage /> },
-      { path: ':mealId/edit', element: <MealEditPage /> },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: '', element: <LandingPage /> },
+        { path: 'login', element: <LoginPage /> },
+        { path: 'signup', element: <SignupPage /> },
+        { path: 'home', element: <HomePage /> },
+      ],
+    },
+    {
+      path: '/my-box',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [{ path: '', element: <BoxEditPage /> }],
+    },
+    {
+      path: '/my-orders',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: '', element: <OrderListPage /> },
+        { path: ':orderId', element: <OrderDetailPage /> },
+      ],
+    },
+    {
+      path: '/meals',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        { path: 'new', element: <MealCreatePage /> },
+        { path: ':mealId', element: <MealDetailPage /> },
+        { path: ':mealId/edit', element: <MealEditPage /> },
+      ],
+    },
+  ],
+  { basename }
+);
 
 export default router;
 
 // function App() {
 //   return (
-//     <BrowserRouter>
+//     <BrowserRouter basename={process.env.PUBLIC_URL}>
 //       <Nav />
 //       <div style={{ height: 56 }}></div>
 //       <div className="container">

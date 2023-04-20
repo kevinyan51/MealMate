@@ -1,7 +1,15 @@
 from authenticator import authenticator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import meals, meal_details, boxes, orders, createmeals, reviews, users
+from routers import (
+    meals,
+    meal_details,
+    boxes,
+    orders,
+    createmeals,
+    reviews,
+    users,
+)
 import datetime
 import os
 
