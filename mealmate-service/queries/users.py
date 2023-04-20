@@ -5,7 +5,7 @@ from queries.pool import pool
 
 class UserIn(BaseModel):
     first_name: str
-    last_name:str
+    last_name: str
     username: str
     email: str
     password: str
@@ -16,7 +16,7 @@ class UserIn(BaseModel):
 class UserOut(BaseModel):
     id: int
     first_name: str
-    last_name:str
+    last_name: str
     username: str
     email: str
     picture_url: str
@@ -32,7 +32,7 @@ class Error(BaseModel):
 
 
 class UserQueries:
-    #####CREATE USER#####
+    # ####CREATE USER#####
     def create(
         self, user: UserIn, hashed_password: str
     ) -> UserOutWithPassword:
@@ -80,8 +80,7 @@ class UserQueries:
             else:
                 raise e
 
-
-    #####GET USER FOR AUTHENTICATOR#####
+    # ####GET USER FOR AUTHENTICATOR#####
     def get(self, username: str) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
@@ -109,8 +108,7 @@ class UserQueries:
             print(e)
             return {"message": "Cannot get user"}
 
-
-    #####GET USER BY ID#####
+    # ####GET USER BY ID#####
     def get_user(self, id: int) -> Optional[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
@@ -138,8 +136,7 @@ class UserQueries:
             print(e)
             return {"message": "Cannot get user"}
 
-
-    #####GET ALL USERS#####
+    # ####GET ALL USERS#####
     def get_all_users(self) -> List[UserOutWithPassword]:
         try:
             with pool.connection() as conn:
@@ -158,13 +155,15 @@ class UserQueries:
                         ORDER BY id;
                         """
                     )
-                    return [self.record_to_user_out(record) for record in cur]
+                    records = result.fetchall()
+                    return [
+                        self.record_to_user_out(record) for record in records
+                    ]
         except Exception as e:
             print(e)
             return {"message": "Cannot get all users"}
 
-
-    #####UPDATE USER#####
+    # ####UPDATE USER#####
     def update_user(
         self, id: int, user: UserIn
     ) -> Optional[UserOutWithPassword]:
@@ -180,7 +179,8 @@ class UserQueries:
                           , email = %s
                           , picture_url = %s
                         WHERE id = %s
-                        RETURNING id, first_name, last_name, username, email, hashed_password, picture_url, role_id
+                        RETURNING id, first_name, last_name, username, email,
+                            hashed_password, picture_url, role_id
                         """,
                         [
                             user.first_name,
@@ -198,8 +198,7 @@ class UserQueries:
             print(e)
             return {"message": "Cannot update user"}
 
-
-    #####DELETE USER#####
+    # ####DELETE USER#####
     def delete_user(self, id: int) -> bool:
         try:
             with pool.connection() as conn:
@@ -216,7 +215,7 @@ class UserQueries:
             print(e)
             return {"message": "Cannot delete user"}
 
-    #####ENCODERS#####
+    # ####ENCODERS#####
 
     def record_to_user_out(self, record):
         return UserOutWithPassword(
