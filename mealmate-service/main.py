@@ -1,4 +1,3 @@
-from authenticator import authenticator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import (
@@ -12,6 +11,7 @@ from routers import (
 )
 import datetime
 import os
+from authenticator import authenticator
 
 app = FastAPI()
 
