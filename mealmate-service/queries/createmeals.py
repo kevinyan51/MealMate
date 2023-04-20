@@ -50,9 +50,39 @@ class MealRepository:
                     result = db.execute(
                         """
                         INSERT INTO meals
-                            (name, name2, picture_url, description, instructions, ingredients, chef_id, calories, is_keto, is_vegan, is_chef_choice, is_spicy, has_cheese, price)
+                            (
+                                name
+                                , name2
+                                , picture_url
+                                , description
+                                , instructions
+                                , ingredients
+                                , chef_id
+                                , calories
+                                , is_keto
+                                , is_vegan
+                                , is_chef_choice
+                                , is_spicy
+                                , has_cheese
+                                , price
+                            )
                         VALUES
-                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            (
+                                %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                                , %s
+                            )
                         RETURNING id;
                         """,
                         [
@@ -86,7 +116,20 @@ class MealRepository:
                     db.execute(
                         """
                         UPDATE meals
-                        SET name = %s, name2 = %s, picture_url = %s, description = %s, instructions = %s, ingredients = %s, chef_id = %s, calories = %s, is_keto = %s, is_vegan = %s, is_chef_choice = %s, is_spicy = %s, has_cheese = %s, price = %s
+                        SET name = %s
+                            , name2 = %s
+                            , picture_url = %s
+                            , description = %s
+                            , instructions = %s
+                            , ingredients = %s
+                            , chef_id = %s
+                            , calories = %s
+                            , is_keto = %s
+                            , is_vegan = %s
+                            , is_chef_choice = %s
+                            , is_spicy = %s
+                            , has_cheese = %s
+                            , price = %s
                         WHERE id = %s
                         """,
                         [
