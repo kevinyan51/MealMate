@@ -19,8 +19,10 @@ dummy_user = {
 class MockUserQuerie:
     def get_user(self, username):
         return [dummy_user] if username == dummy_user["username"] else None
+
+
 def test_get_user():
     app.dependency_overrides[UserQueries] = MockUserQuerie
-    response = client.get("/testing")
+    response = client.get("/users/")
     assert response.status_code == 200
     app.dependency_overrides = {}
