@@ -20,7 +20,7 @@ function SignupPage() {
     data.picture_url = pictureUrl;
     data.role_id = roleId;
 
-    const userUrl = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/users`;
+    const userUrl = `http://localhost:8000/api/users`;
     const fetchConfig = {
       method: "post",
       body: JSON.stringify(data),

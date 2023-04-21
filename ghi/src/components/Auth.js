@@ -8,7 +8,7 @@ export function getToken() {
 }
 
 export async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/token`;
+  const url = `http://localhost:8000/api/token/`;
   try {
     const response = await fetch(url, {
       credentials: "include",
@@ -76,7 +76,7 @@ export function useToken() {
 
   async function logout() {
     if (token) {
-      const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/token`;
+      const url = `http://localhost:8000/api/token/`;
       await fetch(url, { method: "delete", credentials: "include" });
       internalToken = null;
       setToken(null);
@@ -85,7 +85,7 @@ export function useToken() {
   }
 
   async function login(username, password) {
-    const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/token`;
+    const url = `http://localhost:8000/api/token/`;
     const form = new FormData();
     form.append("username", username);
     form.append("password", password);
@@ -112,7 +112,7 @@ export function useToken() {
     pictureUrl,
     roleId
   ) {
-    const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/api/users`;
+    const url = `http://localhost:8000/api/users/`;
     const response = await fetch(url, {
       method: "post",
       body: JSON.stringify({
@@ -120,7 +120,7 @@ export function useToken() {
         last_name: lastName,
         username,
         email,
-        password,
+        hashed_password,
         picture_url: pictureUrl,
         role_id: roleId
       }),
@@ -146,7 +146,7 @@ export function useToken() {
     email,
     pictureUrl,
   ) {
-    const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/users`;
+    const url = `http://localhost:8000/api/users/`;
     const response = await fetch(url, {
       method: "put",
       body: JSON.stringify({
@@ -154,7 +154,7 @@ export function useToken() {
         last_name: lastName,
         username,
         email,
-        password,
+        hashed_password,
         picture_url: pictureUrl
       }),
       headers: {
@@ -179,7 +179,7 @@ export const useUser = (token) => {
     }
 
     async function getUser() {
-      const url = `${process.env.REACT_APP_MEALMATE_SERVICE_API_HOST}/users`;
+      const url = `http://localhost:8000/api/users/`;
       const response = await fetch(url, {
         credentials: "include",
       });
