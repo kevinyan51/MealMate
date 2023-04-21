@@ -5,10 +5,7 @@ from queries.users import UserQueries, UserOut, UserOutWithPassword
 
 
 class UserAuthenticator(Authenticator):
-    async def get_account_data(
-            self,
-            username: str,
-            accounts: UserQueries):
+    async def get_account_data(self, username: str, accounts: UserQueries):
         return accounts.get(username)
 
     def get_account_getter(self, accounts: UserQueries = Depends()):
@@ -21,4 +18,4 @@ class UserAuthenticator(Authenticator):
         return account.username, UserOut(**account.dict())
 
 
-authenticator = UserAuthenticator(os.environ["SIGNING_KEY"])
+authenticator = UserAuthenticator(os.environ.get("SIGNING_KEY"))

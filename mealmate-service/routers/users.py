@@ -1,4 +1,11 @@
-from fastapi import APIRouter, Response, Depends, status, Request, HTTPException
+from fastapi import (
+    APIRouter,
+    Response,
+    Depends,
+    status,
+    Request,
+    HTTPException,
+)
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
 from pydantic import BaseModel
@@ -26,7 +33,7 @@ class HttpError(BaseModel):
 router = APIRouter()
 
 
-#####USER SIGNUP#####
+# ####USER SIGNUP#####
 @router.post("/users", response_model=AccountToken | HttpError)
 async def create_user(
     info: UserIn,
@@ -48,7 +55,7 @@ async def create_user(
     return AccountToken(account=account, **token.dict())
 
 
-#####TOKEN#####
+# ####TOKEN#####
 @router.get("/token", response_model=AccountToken | None)
 async def get_token(
     request: Request,
@@ -62,7 +69,7 @@ async def get_token(
         }
 
 
-#####GET USER#####
+# ####GET USER#####
 @router.get("/users/{user_id}", response_model=UserOutWithPassword)
 def get_one_user(
     user_id: int,
@@ -78,7 +85,7 @@ def get_one_user(
         )
 
 
-#####UPDATE USER#####
+# ####UPDATE USER#####
 @router.put("/users/{user_id}", response_model=UserOut)
 def update_user(
     user_id: int,
@@ -95,7 +102,7 @@ def update_user(
         )
 
 
-#####DELETE USER#####
+# ####DELETE USER#####
 @router.delete("/users/{user_id}", response_model=bool)
 def delete_user(
     user_id: int,
@@ -111,14 +118,18 @@ def delete_user(
         )
 
 
-#####GET ALL USERS#####
+# ####GET ALL USERS#####
 @router.get("/users", response_model=List[UserOutWithPassword])
 def get_all_users(
+    resp: Response,
     repo: UserQueries = Depends(),
-    account_data: dict = Depends(authenticator.get_current_account_data),
+    # account_data: dict = Depends(authenticator.get_current_account_data),
 ):
     try:
-        return repo.get_all_users()
+        result = repo.get_all_users()
+        if result is None:
+            resp.status_code = 500
+        return result
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
