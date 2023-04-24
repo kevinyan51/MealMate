@@ -22,7 +22,9 @@ const BoxEditPage = () => {
 
   const getAllMeals = async () => {
     const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/`;
-    const response = await fetch(url);
+    const response = await fetch(url).catch((e) => {
+      console.log('error getting all meals', e);
+    });
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -63,7 +65,10 @@ const BoxEditPage = () => {
     const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/${
       userId || 1
     }/box_id/`;
-    const response = await fetch(url);
+    console.log('url', url);
+    const response = await fetch(url).catch((e) => {
+      console.log('error getting user box', e);
+    });
     if (response.ok) {
       const data = await response.json();
       setBoxId(data);
@@ -79,7 +84,9 @@ const BoxEditPage = () => {
     const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/boxes/${
       boxId || 1
     }/`;
-    const response = await fetch(url);
+    const response = await fetch(url).catch((e) => {
+      console.log('error getting one box', e);
+    });
     const allMeals = await getAllMeals();
 
     if (response.ok) {
@@ -105,6 +112,8 @@ const BoxEditPage = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ ...box, meals }),
+    }).catch((e) => {
+      console.log('error saving box', e);
     });
     if (response.ok) {
       return console.log('success');

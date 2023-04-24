@@ -12,6 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { useNavigate } from 'react-router-dom';
+import { useToken } from './Auth';
 
 const pages = [
   'login',
@@ -40,6 +41,7 @@ const pagesToRoutes = {
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Nav = () => {
+  const { logout } = useToken();
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [pictureUrl, setPictureUrl] = useState(
     'https://static8.depositphotos.com/1377527/955/i/450/depositphotos_9551898-stock-photo-head-shot-of-chef.jpg'
@@ -48,8 +50,13 @@ const Nav = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (item) => {
     setAnchorElUser(null);
+    if (item == 'Logout') {
+      console.log('logging out');
+      navigate('/');
+      logout();
+    }
   };
 
   const navigate = useNavigate();
@@ -98,7 +105,10 @@ const Nav = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={(_) => handleCloseUserMenu(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

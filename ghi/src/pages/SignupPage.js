@@ -1,43 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { useToken } from '../components/Auth';
 
 function SignupPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
-  const [roleId, setRoleId] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [pictureUrl, setPictureUrl] = useState('');
+  const [roleId, setRoleId] = useState('');
+  const { signup, token } = useToken();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      window.location.href = '/';
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = {};
-    data.first_name = firstName;
-    data.last_name = lastName;
-    data.username = username;
-    data.email = email;
-    data.password = password;
-    data.picture_url = pictureUrl;
-    data.role_id = roleId;
+    // const data = {};
+    // data.first_name = firstName;
+    // data.last_name = lastName;
+    // data.username = username;
+    // data.email = email;
+    // data.password = password;
+    // data.picture_url = pictureUrl;
+    // data.role_id = roleId;
 
-    const userUrl = `http://localhost:8000/api/users`;
-    const fetchConfig = {
-      method: "post",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    // const userUrl =  `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users`;
+    // const fetchConfig = {
+    //   method: 'post',
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // };
 
-    const response = await fetch(userUrl, fetchConfig);
+    // const response = await fetch(userUrl, fetchConfig);
+    const response = signup({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      pictureUrl,
+      roleId,
+    });
     if (response.ok) {
-      setFirstName("");
-      setLastName("");
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setPictureUrl("");
-      setRoleId("");
+      setFirstName('');
+      setLastName('');
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      setPictureUrl('');
+      setRoleId('');
+      window.location.href = '/';
     }
   };
 
