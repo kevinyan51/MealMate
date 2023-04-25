@@ -12,7 +12,7 @@ dummy_user = {
     "email": "jd@mm.com",
     "picture_url": "",
     "role_id": 1,
-    "hashed_password": "strongestpassword"
+    "hashed_password": "strongestpassword",
 }
 
 

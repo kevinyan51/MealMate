@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Card as BCard, Modal as BModal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import {
   faSeedling,
   faPepperHot,
@@ -13,8 +14,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MealCard from '../components/MealCard';
+import { IconButton, Typography } from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
 
 const BoxEditPage = () => {
+  const navigate = useNavigate();
   const [box, setBox] = useState({});
   const [showModal, setShowModal] = useState(false);
 
@@ -125,6 +129,9 @@ const BoxEditPage = () => {
 
   return (
     <Box p={4}>
+      <Typography variant="h1" sx={{ mb: 2 }}>
+        My Meal Box
+      </Typography>
       <Box mb={2} mr={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant="outlined" onClick={saveBox} sx={{ mr: 2 }}>
           save box
@@ -165,9 +172,23 @@ const BoxEditPage = () => {
             overflow: 'scroll',
           }}
         >
-          <BModal.Header>
-            <BModal.Title>{selectedMeal?.name}</BModal.Title>
-          </BModal.Header>
+          <Box
+            sx={{
+              mb: 1,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <BModal.Header>
+              <BModal.Title>{selectedMeal?.name}</BModal.Title>
+            </BModal.Header>
+            <IconButton
+              onClick={() => navigate(`/meals/${selectedMeal.meal_id}`)}
+            >
+              <MoreVert />
+            </IconButton>
+          </Box>
           <BModal.Body>
             <BCard.Img
               src={selectedMeal?.picture_url}
