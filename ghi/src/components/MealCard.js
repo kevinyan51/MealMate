@@ -86,16 +86,17 @@ const MealCard = ({
         height: simpleCard ? 250 : 420,
         position: 'relative',
       }}
-      onClick={() => {
-        setSelectedMeal(meal);
-        setShowModal(true);
-      }}
     >
       <CardMedia
         component="img"
         height="194"
         image={meal.picture_url}
         alt="Paella dish"
+        onClick={() => {
+          setSelectedMeal(meal);
+          setShowModal(true);
+        }}
+        sx={{ cursor: 'pointer' }}
       />
 
       {!simpleCard && (

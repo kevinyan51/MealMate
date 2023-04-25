@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MealCreatePage from './MealCreatePage';
 import { useParams } from 'react-router-dom';
 
 const MealEditPage = () => {
   const [meal, setMeal] = useState(null);
   const { mealId } = useParams();
+  const navigate = useNavigate();
   const editMeal = async (mealIn) => {
-    const mealUrl = `http://localhost:8000/api/meals/${mealId}/`;
-    const res = await fetch(mealUrl, {
+    const mealUrl = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${mealId}/`;
+    const response = await fetch(mealUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(mealIn),
     });
-    const data = await res.json();
-    console.log(data);
+    if (response.ok) {
+      const meal = await response.json();
+      navigate(`/meals/${meal.id}`);
+    } else {
+      // console.log('Error updating meal');
+      navigate('/meals');
+    }
   };
   const fetchMeal = async () => {
-    const mealUrl = `http://localhost:8000/api/meals/${mealId}/`;
-    const res = await fetch(mealUrl);
-    const meal = await res.json();
-    setMeal(meal);
+    const mealUrl = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${mealId}/`;
+    const response = await fetch(mealUrl);
+    if (response.ok) {
+      const meal = await response.json();
+      setMeal(meal);
+    }
   };
   useEffect(() => {
     fetchMeal();
