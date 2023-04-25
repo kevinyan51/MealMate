@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
+import male_chef from '../assets/images/male_chef.png';
+
 
 const OrderItem = ({ meal }) => {
   return (
@@ -41,38 +43,48 @@ const OrderItem = ({ meal }) => {
   );
 };
 
-const OrderDetail = ({ order, hasShadow = true, bgcolor = 'white' }) => {
+const OrderDetail = ({ order, hasShadow = false, bgcolor = 'white' }) => {
   return (
     <Box
       sx={{
+        display: 'flex',
         m: hasShadow ? 2 : 0,
         p: 4,
         borderRadius: hasShadow ? 2 : 0,
         boxShadow: hasShadow ? '1px 1px 10px 3px rgba(0,0,0,0.1)' : 'none',
         bgcolor: bgcolor,
-        width: 700,
+        // width: '100%',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="caption">Order#: {order?.order_id}</Typography>
-        <Typography variant="caption">
-          {order?.order_created_at?.split('T')[0]}
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
-        <Typography variant="caption">
-          Order Total: ${order?.total_price?.toFixed(2)}
-        </Typography>
-      </Box>
-      <Typography variant="caption" sx={{ mt: 2 }}>
-        Status: {order?.order_status}
-      </Typography>
-      <Divider color="primary" sx={{ m: 2 }} />
-      {order?.meals?.map((meal, idx) => (
-        <Box key={idx} sx={{ pl: 4, pt: 2, pb: 2 }}>
-          <OrderItem meal={meal} />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          // justifyContent: 'space-between',
+          width: '50%',
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="caption">Order#: {order?.order_id}</Typography>
+          <Typography variant="caption">
+            {order?.order_created_at?.split('T')[0]}
+          </Typography>
         </Box>
-      ))}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
+          <Typography variant="caption">
+            Order Total: ${order?.total_price?.toFixed(2)}
+          </Typography>
+        </Box>
+        <Typography variant="caption" sx={{ mt: 2 }}>
+          Status: {order?.order_status}
+        </Typography>
+        <Divider color="primary" sx={{ m: 2 }} />
+        {order?.meals?.map((meal, idx) => (
+          <Box key={idx} sx={{ pl: 4, pt: 2, pb: 2 }}>
+            <OrderItem meal={meal} />
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };

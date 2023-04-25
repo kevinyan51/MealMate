@@ -40,7 +40,6 @@ const TopRowIcons = ({ infoArray }) => {
     </Box>
   );
 };
-
 const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
   const colorMapping = {
     pending: COLORS.orange,
@@ -136,7 +135,6 @@ const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
     </Box>
   );
 };
-
 const OrderListPage = () => {
   const [userId, setUserId] = useState(15);
   const [orders, setOrders] = useState([]);
@@ -185,7 +183,6 @@ const OrderListPage = () => {
       ]);
     }
   }, [orders]);
-
   return (
     <Box sx={{ p: 7 }}>
       <Box sx={{ display: 'flex' }}>
@@ -243,5 +240,4 @@ const OrderListPage = () => {
     </Box>
   );
 };
-
 export default OrderListPage;
