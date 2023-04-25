@@ -6,7 +6,9 @@ const OrderDetailPage = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState({});
   const loadOrder = async () => {
-    const url = `http://localhost:8000/api/orders/${orderId ?? 3}`;
+    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/orders/${
+      orderId ?? 3
+    }`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
