@@ -12,10 +12,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { useNavigate } from 'react-router-dom';
+import { useToken } from './Auth';
 
 const pages = [
-  'login',
-  'signup',
   'home',
   'my box',
   'meals',
@@ -37,19 +36,26 @@ const pagesToRoutes = {
   'edit meal': '/meals/1/edit',
   'meal detail': '/meals/1',
 };
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Dashboard', 'Logout'];
 
 const Nav = () => {
+  const { logout, user } = useToken();
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [pictureUrl, setPictureUrl] = useState(
-    'https://static8.depositphotos.com/1377527/955/i/450/depositphotos_9551898-stock-photo-head-shot-of-chef.jpg'
-  );
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (item) => {
     setAnchorElUser(null);
+    if (item == 'Logout') {
+      console.log('logging out');
+      navigate('/');
+      logout();
+    } else if (item === 'Profile') {
+      navigate('/profile');
+    } else if (item === 'Dashboard') {
+      navigate('/dashboard');
+    }
   };
 
   const navigate = useNavigate();
@@ -64,6 +70,7 @@ const Nav = () => {
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: 'flex' }}>
+            {' '}
             {pages.map((page) => (
               <Button
                 key={page}
@@ -75,35 +82,53 @@ const Nav = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="MealMate" src={pictureUrl} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+          {user && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="MealMate" src={user?.picture_url} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={(_) => handleCloseUserMenu(setting)}
+                  >
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
+          {!user && (
+            <Box sx={{ display: 'flex' }}>
+              {['signup', 'login'].map((page) => (
+                <Button
+                  key={page}
+                  onClick={() => navigate(pagesToRoutes[page])}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
               ))}
-            </Menu>
-          </Box>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

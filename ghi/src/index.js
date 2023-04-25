@@ -7,6 +7,8 @@ import router from './App';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { COLORS } from './utils/constants';
 import myFonts from './theme/theme';
+import { AuthProvider } from "./components/Auth.js";
+
 
 const customTheme = createTheme({
   palette: {
@@ -28,9 +30,11 @@ const customTheme = createTheme({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <ThemeProvider theme={customTheme}>
-    <RouterProvider router={router} />
-  </ThemeProvider>
+  <AuthProvider>
+    <ThemeProvider theme={customTheme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </AuthProvider>
   // </React.StrictMode>
 );
 

@@ -132,7 +132,9 @@ const Review = () => {
   const { mealId } = useParams();
   const loadReviews = async () => {
     const response = await fetch(
-      `http://localhost:8000/api/meals/${mealId ?? 7}/reviews/`
+      `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${
+        mealId ?? 7
+      }/reviews/`
     );
     if (response.ok) {
       const data = await response.json();

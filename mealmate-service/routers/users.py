@@ -34,7 +34,7 @@ router = APIRouter()
 
 
 # ####USER SIGNUP#####
-@router.post("/users", response_model=AccountToken | HttpError)
+@router.post("/users/", response_model=AccountToken | HttpError)
 async def create_user(
     info: UserIn,
     request: Request,
@@ -56,7 +56,7 @@ async def create_user(
 
 
 # ####TOKEN#####
-@router.get("/token", response_model=AccountToken | None)
+@router.get("/token/", response_model=AccountToken | None)
 async def get_token(
     request: Request,
     account: UserIn = Depends(authenticator.try_get_current_account_data),
@@ -70,7 +70,7 @@ async def get_token(
 
 
 # ####GET USER#####
-@router.get("/users/{user_id}", response_model=UserOutWithPassword)
+@router.get("/users/{user_id}/", response_model=UserOutWithPassword)
 def get_one_user(
     user_id: int,
     repo: UserQueries = Depends(),
@@ -86,7 +86,7 @@ def get_one_user(
 
 
 # ####UPDATE USER#####
-@router.put("/users/{user_id}", response_model=UserOut)
+@router.put("/users/{user_id}/", response_model=UserOut)
 def update_user(
     user_id: int,
     user: UserIn,
@@ -103,7 +103,7 @@ def update_user(
 
 
 # ####DELETE USER#####
-@router.delete("/users/{user_id}", response_model=bool)
+@router.delete("/users/{user_id}/", response_model=bool)
 def delete_user(
     user_id: int,
     repo: UserQueries = Depends(),
@@ -119,7 +119,7 @@ def delete_user(
 
 
 # ####GET ALL USERS#####
-@router.get("/users", response_model=List[UserOutWithPassword])
+@router.get("/users/", response_model=List[UserOutWithPassword])
 def get_all_users(
     resp: Response,
     repo: UserQueries = Depends(),
