@@ -85,7 +85,9 @@ const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
                   setSelectedOrderId(s.order_id);
                 }}
               >
-                <td style={{ paddingLeft: 20 }}>{s.order_id}</td>
+                <td style={{ paddingLeft: 20 }}>
+                  <a href={`/my-orders/${s.order_id}`}>{s.order_id}</a>
+                </td>
                 <td>
                   <Box>
                     <Typography>{s.num_meals}</Typography>

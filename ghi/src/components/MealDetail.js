@@ -91,7 +91,7 @@ const MealDetail = ({ mealId }) => {
   };
 
   useEffect(() => {
-    if (meal) {
+    if (meal && meal?.chef_id) {
       fetchChefMeals(meal.chef_id);
     }
   }, [meal]);
@@ -162,14 +162,14 @@ const MealDetail = ({ mealId }) => {
                 <span className="badge bg-info text-dark me-1">Cheese</span>
               )}
             </Typography>
-            <Typography m={2}>
-              <h5 className="text-dark">Description:</h5>
-              {meal.description}
+            <Typography variant="h5" alignSelf={'flex-start'} sx={{ m: 2 }}>
+              Description:
             </Typography>
-            <Typography m={2}>
-              <h5 className="text-dark">Ingredients:</h5>
-              {meal.ingredients}
+            <Typography m={2}>{meal.description}</Typography>
+            <Typography variant="h5" alignSelf={'flex-start'} sx={{ m: 2 }}>
+              Ingredients:
             </Typography>
+            <Typography m={2}>{meal.ingredients}</Typography>
           </Box>
           <Box sx={{ flex: 1, p: 2 }}>
             <Typography variant="h5" mt={3} mb={3}>
@@ -177,7 +177,7 @@ const MealDetail = ({ mealId }) => {
             </Typography>
             <Grid container spacing={2}>
               {chefMeals.map((meal) => (
-                <Grid item xs={[12, 6]}>
+                <Grid item xs={12} sm={6} key={meal.meal_id}>
                   <MealCard
                     meal={meal}
                     simpleCard={true}
