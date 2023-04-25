@@ -17,7 +17,7 @@ import { useToken } from './Auth';
 const pages = [
   'home',
   'my box',
-  // 'meals',
+  'meals',
   'my orders',
   'order detail',
   'new meal',
@@ -29,7 +29,7 @@ const pagesToRoutes = {
   signup: '/signup',
   home: '/home',
   'my box': '/my-box',
-  // meals: '/meals',
+  meals: '/meals',
   'my orders': '/my-orders',
   'order detail': '/my-orders/1',
   'new meal': '/meals/new',
