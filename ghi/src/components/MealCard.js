@@ -13,6 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { COLORS } from '../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 const Tags = ({ tags }) => {
   const tagMap = {
@@ -77,6 +78,7 @@ const MealCard = ({
   setShowModal = () => null,
   simpleCard = false,
 }) => {
+  const navigate = useNavigate();
   if (!meal) return null;
   return (
     <Card
@@ -124,7 +126,10 @@ const MealCard = ({
             </Box>
           }
           action={
-            <IconButton aria-label="settings">
+            <IconButton
+              aria-label="settings"
+              onClick={() => navigate(`/meals/${meal.meal_id}`)}
+            >
               <MoreVertIcon />
             </IconButton>
           }
@@ -154,8 +159,8 @@ const MealCard = ({
           </Typography>
         </Box>
         <Typography variant="caption" color="gray">
-          {meal?.name2?.length > 50
-            ? `${meal?.name2?.slice(0, meal.name2.lastIndexOf(' ', 50))}...`
+          {meal?.name2?.length > 45
+            ? `${meal?.name2?.slice(0, meal.name2.lastIndexOf(' ', 45))}...`
             : meal?.name2}
         </Typography>
         {!simpleCard && (
