@@ -9,7 +9,7 @@ function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [pictureUrl, setPictureUrl] = useState('');
-  const [roleId, setRoleId] = useState('');
+  const [roleId, setRoleId] = useState(1);
   const { signup, token } = useToken();
   const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ function SignupPage() {
       setEmail('');
       setPassword('');
       setPictureUrl('');
-      setRoleId('');
+      setRoleId(1);
     }
   };
 
@@ -128,7 +128,7 @@ function SignupPage() {
                 value={password}
                 placeholder="Password"
                 required
-                type="text"
+                type="password"
                 name="password"
                 id="password"
                 className="form-control"
@@ -137,31 +137,34 @@ function SignupPage() {
             </div>
 
             <div className="form-floating mb-3">
-              <input
+              <select
                 onChange={(e) => setPictureUrl(e.target.value)}
                 value={pictureUrl}
-                placeholder="Picture Url"
                 required
-                type="text"
                 name="pictureUrl"
                 id="pictureUrl"
-                className="form-control"
-              />
-              <label htmlFor="pictureUrl">Picture URL</label>
+                className="form-select"
+              >
+                <option value="">Choose an avatar</option>
+                <option value="https://img.freepik.com/premium-vector/african-american-woman-avatar-with-glasses-portrait-young-girl-vector-illustration-face_217290-1034.jpg?w=2000">Female Avatar</option>
+                <option value="https://img.freepik.com/premium-vector/brunette-man-avatar-portrait-young-guy-vector-illustration-face_217290-1035.jpg?w=2000">Male Avatar</option>
+                <option value="https://thestayathomechef.com/wp-content/uploads/2016/06/Fried-Chicken-4-1.jpg">Let me be Fried Chicken instead</option>
+              </select>
+              <label htmlFor="pictureUrl">Choose an Avatar</label>
             </div>
 
-            <div className="form-floating mb-3">
+            <div className="form-check form-switch mb-3">
               <input
-                onChange={(e) => setRoleId(e.target.value)}
-                value={roleId}
-                placeholder="Role Id"
-                required
-                type="int"
-                name="Role Id"
+                onChange={(e) => setRoleId(e.target.checked ? 2 : 1)}
+                checked={roleId === 2}
+                type="checkbox"
+                name="RoleId"
                 id="roleId"
-                className="form-control"
+                className="form-check-input"
               />
-              <label htmlFor="roleId">Role ID</label>
+              <label htmlFor="roleId" className="form-check-label">
+                {roleId === 2 ? "Chef" : "Subscriber"}
+              </label>
             </div>
 
             <button className="btn btn-primary">Create</button>

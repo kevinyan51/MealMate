@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
+import male_chef from '../assets/images/male_chef.png';
 
 const OrderItem = ({ meal, detailed_view = false }) => {
   return (
