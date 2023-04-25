@@ -21,6 +21,7 @@ dummy_meal = {
     "price": 10.00,
 }
 
+
 class DummyMealsRepoCreate:
     def create(self, meal: MealIn):
         return MealOut(
@@ -41,9 +42,10 @@ class DummyMealsRepoCreate:
             price=meal.price,
         )
 
+
 def test_create_meal():
     app.dependency_overrides[MealRepository] = DummyMealsRepoCreate
-    response = client.post('/api/meals/', json=dummy_meal)
+    response = client.post("/api/meals/", json=dummy_meal)
     app.dependency_overrides = {}
     assert response.status_code == 200
     assert response.json() == {
