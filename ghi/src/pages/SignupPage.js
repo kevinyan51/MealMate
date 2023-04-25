@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useToken } from '../components/Auth';
+import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
   const [firstName, setFirstName] = useState('');
@@ -10,12 +11,13 @@ function SignupPage() {
   const [pictureUrl, setPictureUrl] = useState('');
   const [roleId, setRoleId] = useState('');
   const { signup, token } = useToken();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      window.location.href = '/';
+    if (token) {
+      navigate('/');
     }
-  }, []);
+  }, [token]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,7 +40,7 @@ function SignupPage() {
     // };
 
     // const response = await fetch(userUrl, fetchConfig);
-    const response = signup({
+    const response = await signup({
       firstName,
       lastName,
       username,
@@ -55,7 +57,6 @@ function SignupPage() {
       setPassword('');
       setPictureUrl('');
       setRoleId('');
-      window.location.href = '/';
     }
   };
 

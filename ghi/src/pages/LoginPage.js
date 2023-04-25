@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useToken } from '../components/Auth';
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function LoginPage() {
+  const { login, token } = useToken();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { login, token } = useToken();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log('herer');
-      const response = await login({ username, password });
-      console.log('login data', response);
-      localStorage.setItem('token', response.token);
-      window.location.href = '/';
-
+      const response = await login(username, password);
+      localStorage.setItem('token', response);
       setErrorMessage('');
     } catch (error) {
       setErrorMessage('Cannot login');
@@ -23,10 +21,11 @@ function Login() {
   };
 
   useEffect(() => {
-    const localToken = localStorage.getItem('token');
-    if (localToken) {
+    // const token = localStorage.getItem('token');
+    if (token) {
       // redirect to home page
-      window.location.href = '/';
+      navigate('/');
+      // window.location.href = '/';
     }
   }, [token]);
 
@@ -50,4 +49,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

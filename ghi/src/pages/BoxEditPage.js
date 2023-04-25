@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { COLORS } from '../utils/constants';
 import Modal from '@mui/material/Modal';
 import { Card as BCard, Modal as BModal } from 'react-bootstrap';
 import {

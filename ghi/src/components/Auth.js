@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 let internalToken = null;
 
@@ -8,18 +9,19 @@ export function getToken() {
 }
 
 export async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/token/`;
+  const url = `http://localhost:8000/api/token/`;
   try {
     const response = await fetch(url, {
       credentials: 'include',
     });
     if (response.ok) {
       const data = await response.json();
-      internalToken = data.access_token;
-      return internalToken;
+      return { account: data?.account, access_token: data?.access_token };
     }
-  } catch (e) {}
-  return false;
+  } catch (e) {
+    console.error('error getting token', e);
+  }
+  return { account: null, access_token: null };
 }
 
 function handleErrorMessage(error) {
@@ -50,9 +52,10 @@ export const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ user, setUser, token, setToken }}>
       {children}
     </AuthContext.Provider>
   );
@@ -61,13 +64,14 @@ export const AuthProvider = ({ children }) => {
 export const useAuthContext = () => useContext(AuthContext);
 
 export function useToken() {
-  const { token, setToken } = useAuthContext();
+  const { token, setToken, user, setUser } = useAuthContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchToken() {
-      const token = await getTokenInternal();
-      setToken(token);
+      const { account, access_token } = await getTokenInternal();
+      setToken(access_token);
+      setUser(account);
     }
     if (!token) {
       fetchToken();
@@ -75,10 +79,8 @@ export function useToken() {
   }, [setToken, token]);
 
   async function logout() {
-    console.log('token', token);
-    localStorage.removeItem('token');
     if (token) {
-      const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/token`;
+      const url = `http://localhost:8000/api/token`;
       await fetch(url, { method: 'delete', credentials: 'include' });
       internalToken = null;
       setToken(null);
@@ -87,18 +89,20 @@ export function useToken() {
   }
 
   async function login(username, password) {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/token`;
-    const data = { username, password };
+    const url = `http://localhost:8000/api/token`;
+    const form = new FormData();
+    form.append('username', username);
+    form.append('password', password);
     const response = await fetch(url, {
       method: 'post',
-      body: JSON.stringify(data),
+      credentials: 'include',
+      body: form,
     });
-    debugger;
-    console.log('response', response);
     if (response.ok) {
-      const token = await getTokenInternal();
-      setToken(token);
-      return token;
+      const { access_token, account } = await getTokenInternal();
+      setToken(access_token);
+      setUser(account);
+      return access_token;
     }
     let error = await response.json();
     return handleErrorMessage(error);
@@ -113,7 +117,7 @@ export function useToken() {
     pictureUrl,
     roleId,
   }) {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/`;
+    const url = `http://localhost:8000/api/users`;
     const response = await fetch(url, {
       method: 'post',
       body: JSON.stringify({
@@ -129,8 +133,6 @@ export function useToken() {
         'Content-Type': 'application/json',
       },
     });
-
-    debugger;
     if (response.ok) {
       await login(username, password);
       console.log('Signup Successful');
@@ -145,12 +147,12 @@ export function useToken() {
   async function update(
     firstName,
     lastName,
-    username,
     password,
+    username,
     email,
     pictureUrl
   ) {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/`;
+    const url = `http://localhost:8000/api/users/`;
     const response = await fetch(url, {
       method: 'put',
       body: JSON.stringify({
@@ -171,7 +173,7 @@ export function useToken() {
     return false;
   }
 
-  return { token, login, logout, signup, update };
+  return { token, login, logout, signup, update, user };
 }
 
 export const useUser = (token) => {
@@ -183,7 +185,7 @@ export const useUser = (token) => {
     }
 
     async function getUser() {
-      const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/`;
+      const url = `http://localhost:8000/api/users/`;
       const response = await fetch(url, {
         credentials: 'include',
       });

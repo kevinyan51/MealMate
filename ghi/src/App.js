@@ -13,6 +13,8 @@ import MealDetailPage from './pages/MealDetailPage.js';
 import OrderListPage from './pages/OrderListPage.js';
 import OrderDetailPage from './pages/OrderDetailPage.js';
 import { Box } from '@mui/material';
+import UserProfilePage from './pages/UserProfilePage';
+import DashboardPage from './pages/DashboardPage';
 
 const domain = /https:\/\/[^/]+/;
 const basename = process.env.PUBLIC_URL.replace(domain, '');
@@ -38,6 +40,8 @@ const router = createBrowserRouter(
         { path: 'login', element: <LoginPage /> },
         { path: 'signup', element: <SignupPage /> },
         { path: 'home', element: <HomePage /> },
+        { path: 'profile', element: <UserProfilePage /> },
+        { path: 'dashboard', element: <DashboardPage /> },
       ],
     },
     {
