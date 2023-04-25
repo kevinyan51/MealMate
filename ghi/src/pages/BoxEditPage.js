@@ -23,7 +23,7 @@ const BoxEditPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const getAllMeals = async () => {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/`;
+    const url = `${process.env.REACT_APP_USER_API_HOST}/api/meals/`;
     const response = await fetch(url).catch((e) => {
       console.log('error getting all meals', e);
     });
@@ -64,7 +64,7 @@ const BoxEditPage = () => {
 
   const getUserBox = async () => {
     if (!userId) setUserId(1);
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/${
+    const url = `${process.env.REACT_APP_USER_API_HOST}/api/users/${
       userId || 1
     }/box_id/`;
     console.log('url', url);
@@ -83,7 +83,7 @@ const BoxEditPage = () => {
   const [selectedMeal, setSelectedMeal] = useState(null);
 
   const getOneBox = async () => {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/boxes/${
+    const url = `${process.env.REACT_APP_USER_API_HOST}/api/boxes/${
       boxId || 1
     }/`;
     const response = await fetch(url).catch((e) => {
@@ -106,7 +106,7 @@ const BoxEditPage = () => {
     }
   };
   const saveBox = async () => {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/boxes/${boxId}/`;
+    const url = `${process.env.REACT_APP_USER_API_HOST}/api/boxes/${boxId}/`;
     let meals = [...box.meals.filter((meal) => meal.quantity > 0)];
     const response = await fetch(url, {
       method: 'PUT',

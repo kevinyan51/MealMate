@@ -10,7 +10,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 const MealDetail = () => {
   const [meal, setMeal] = useState({});
   const id = useParams().mealId;
-  const mealUrl = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${id}/`;
+  const mealUrl = `${process.env.REACT_APP_USER_API_HOST}/api/meals/${id}/`;
 
   const fetchMeal = async () => {
     const response = await fetch(mealUrl);
@@ -105,7 +105,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 const MealDetail = () => {
   const [meal, setMeal] = useState({});
   const id = useParams().mealId;
-  const mealUrl = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${id}/`;
+  const mealUrl = `${process.env.REACT_APP_USER_API_HOST}/api/meals/${id}/`;
 
   const fetchMeal = async () => {
     const response = await fetch(mealUrl);

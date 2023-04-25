@@ -30,7 +30,7 @@ function SignupPage() {
     // data.picture_url = pictureUrl;
     // data.role_id = roleId;
 
-    // const userUrl =  `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users`;
+    // const userUrl =  `${process.env.REACT_APP_USER_API_HOST}/api/users`;
     // const fetchConfig = {
     //   method: 'post',
     //   body: JSON.stringify(data),
