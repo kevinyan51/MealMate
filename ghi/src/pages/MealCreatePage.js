@@ -62,7 +62,7 @@ const MealCreatePage = ({
     if (buttonAction) {
       return buttonAction(data);
     }
-    const mealUrl = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/`;
+    const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals`;
     const fetchConfig = {
       method: 'POST',
       body: JSON.stringify(data),

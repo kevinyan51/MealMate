@@ -6,7 +6,7 @@ from typing import Union
 router = APIRouter()
 
 
-@router.post("/meals/", response_model=Union[MealOut, Error])
+@router.post("/meals", response_model=Union[MealOut, Error])
 def create_meal(
     meals: MealIn, response: Response, repo: MealRepository = Depends()
 ):
@@ -16,7 +16,7 @@ def create_meal(
     return result
 
 
-@router.put("/meals/{meal_id}/", response_model=Union[MealOut, Error])
+@router.put("/meals/{meal_id}", response_model=Union[MealOut, Error])
 def update_meal(
     meal_id: int,
     meal: MealIn,
@@ -25,7 +25,7 @@ def update_meal(
     return repo.update_meal(meal_id, meal)
 
 
-@router.delete("/meals/{meal_id}/", response_model=bool)
+@router.delete("/meals/{meal_id}", response_model=bool)
 def delete_meal(
     meal_id: int,
     repo: MealRepository = Depends(),

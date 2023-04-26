@@ -10,6 +10,7 @@ function SignupPage() {
   const [password, setPassword] = useState('');
   const [pictureUrl, setPictureUrl] = useState('');
   const [roleId, setRoleId] = useState(1);
+  const [roleId, setRoleId] = useState(1);
   const { signup, token } = useToken();
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ function SignupPage() {
     // data.picture_url = pictureUrl;
     // data.role_id = roleId;
 
-    // const userUrl =  `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users`;
+    // const userUrl =  `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
     // const fetchConfig = {
     //   method: 'post',
     //   body: JSON.stringify(data),
@@ -56,6 +57,7 @@ function SignupPage() {
       setEmail('');
       setPassword('');
       setPictureUrl('');
+      setRoleId(1);
       setRoleId(1);
     }
   };
@@ -129,6 +131,7 @@ function SignupPage() {
                 placeholder="Password"
                 required
                 type="password"
+                type="password"
                 name="password"
                 id="password"
                 className="form-control"
@@ -137,6 +140,7 @@ function SignupPage() {
             </div>
 
             <div className="form-floating mb-3">
+              <select
               <select
                 onChange={(e) => setPictureUrl(e.target.value)}
                 value={pictureUrl}
@@ -154,12 +158,18 @@ function SignupPage() {
             </div>
 
             <div className="form-check form-switch mb-3">
+            <div className="form-check form-switch mb-3">
               <input
                 onChange={(e) => setRoleId(e.target.checked ? 2 : 1)}
                 checked={roleId === 2}
                 type="checkbox"
                 name="RoleId"
+                onChange={(e) => setRoleId(e.target.checked ? 2 : 1)}
+                checked={roleId === 2}
+                type="checkbox"
+                name="RoleId"
                 id="roleId"
+                className="form-check-input"
                 className="form-check-input"
               />
               <label htmlFor="roleId" className="form-check-label">

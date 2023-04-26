@@ -106,7 +106,7 @@ class MealRepository:
                     old_data = meal.dict()
                     return MealOut(id=id, **old_data)
         except Exception as e:
-            print(f"**\nError Message:\n\n {e}\n**")
+            # print(f"**\nError Message:\n\n {e}\n**")
             return Error(message=str(e))
 
     def update_meal(self, meal_id: int, meal: MealIn) -> Union[MealOut, Error]:
@@ -152,7 +152,7 @@ class MealRepository:
                     )
                     return self.meal_in_to_out(meal_id, meal)
         except Exception as e:
-            print(e)
+            # print(e)
             return {"message": "Could not update meal"}
 
     def meal_in_to_out(self, id: int, meal: MealIn):
@@ -173,5 +173,5 @@ class MealRepository:
                     )
                     return True
         except Exception as e:
-            print(e)
+            # print(e)
             return False

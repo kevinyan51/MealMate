@@ -66,12 +66,12 @@ class MealDetailsRepository:
                         [meals_id],
                     )
                     record = result.fetchone()
-                    print("record *************", record)
+                    # print("record *************", record)
                     if record is None:
                         return None
                     return self.record_to_meal_out(record)
         except Exception as e:
-            print(e)
+            # print(e)
             return {"message": "Could not get meal details"}
 
     def record_to_meal_out(self, record):
@@ -136,12 +136,12 @@ class ChefMealDetailsRepository:
                         [meals_id, chef_id],
                     )
                     record = result.fetchone()
-                    print("record *************", record)
+                    # print("record *************", record)
                     if record is None:
                         return None
                     return self.chef_record_to_meal_out(record)
         except Exception as e:
-            print(e)
+            # print(e)
             return {"message": "Could not get meal details"}
 
     def chef_record_to_meal_out(self, record):
