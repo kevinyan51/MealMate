@@ -85,7 +85,7 @@ const MealDetail = ({ mealId }) => {
       throw new Error('Error getting chef meals');
     }
     const data = await response.json();
-    console.log('meals', data);
+    // console.log('meals', data);
     let cMeals = [...data.filter((m) => m.meal_id != mealId)];
     setChefMeals(cMeals.length > 5 ? cMeals.slice(0, 5) : cMeals);
   };
