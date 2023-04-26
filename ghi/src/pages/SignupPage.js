@@ -30,7 +30,7 @@ function SignupPage() {
     // data.picture_url = pictureUrl;
     // data.role_id = roleId;
 
-    // const userUrl =  `${process.env.REACT_APP_USER_API_HOST}/api/users`;
+    // const userUrl =  `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
     // const fetchConfig = {
     //   method: 'post',
     //   body: JSON.stringify(data),
@@ -146,9 +146,15 @@ function SignupPage() {
                 className="form-select"
               >
                 <option value="">Choose an avatar</option>
-                <option value="https://img.freepik.com/premium-vector/african-american-woman-avatar-with-glasses-portrait-young-girl-vector-illustration-face_217290-1034.jpg?w=2000">Female Avatar</option>
-                <option value="https://img.freepik.com/premium-vector/brunette-man-avatar-portrait-young-guy-vector-illustration-face_217290-1035.jpg?w=2000">Male Avatar</option>
-                <option value="https://thestayathomechef.com/wp-content/uploads/2016/06/Fried-Chicken-4-1.jpg">Let me be Fried Chicken instead</option>
+                <option value="https://img.freepik.com/premium-vector/african-american-woman-avatar-with-glasses-portrait-young-girl-vector-illustration-face_217290-1034.jpg?w=2000">
+                  Female Avatar
+                </option>
+                <option value="https://img.freepik.com/premium-vector/brunette-man-avatar-portrait-young-guy-vector-illustration-face_217290-1035.jpg?w=2000">
+                  Male Avatar
+                </option>
+                <option value="https://thestayathomechef.com/wp-content/uploads/2016/06/Fried-Chicken-4-1.jpg">
+                  Let me be Fried Chicken instead
+                </option>
               </select>
               <label htmlFor="pictureUrl">Choose an Avatar</label>
             </div>
@@ -163,7 +169,7 @@ function SignupPage() {
                 className="form-check-input"
               />
               <label htmlFor="roleId" className="form-check-label">
-                {roleId === 2 ? "Chef" : "Subscriber"}
+                {roleId === 2 ? 'Chef' : 'Subscriber'}
               </label>
             </div>
 

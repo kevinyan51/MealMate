@@ -7,7 +7,7 @@ const OrderDetailPage = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState({});
   const loadOrder = async () => {
-    const url = `${process.env.REACT_APP_USER_API_HOST}/api/orders/${
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/orders/${
       orderId ?? 3
     }`;
     const response = await fetch(url);

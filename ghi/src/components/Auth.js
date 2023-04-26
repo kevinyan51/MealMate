@@ -8,7 +8,7 @@ export function getToken() {
 }
 
 export async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_USER_API_HOST}/api/token/`;
+  const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/token/`;
   try {
     const response = await fetch(url, {
       credentials: 'include',
@@ -79,7 +79,7 @@ export function useToken() {
 
   async function logout() {
     if (token) {
-      const url = `${process.env.REACT_APP_USER_API_HOST}/api/token`;
+      const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/token`;
       await fetch(url, { method: 'delete', credentials: 'include' });
       internalToken = null;
       setToken(null);
@@ -89,7 +89,7 @@ export function useToken() {
   }
 
   async function login(username, password) {
-    const url = `${process.env.REACT_APP_USER_API_HOST}/api/token`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/token`;
     const form = new FormData();
     form.append('username', username);
     form.append('password', password);
@@ -117,7 +117,7 @@ export function useToken() {
     pictureUrl,
     roleId,
   }) {
-    const url = `${process.env.REACT_APP_USER_API_HOST}/api/users`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
     const response = await fetch(url, {
       method: 'post',
       body: JSON.stringify({
@@ -152,7 +152,7 @@ export function useToken() {
     email,
     pictureUrl
   ) {
-    const url = `${process.env.REACT_APP_USER_API_HOST}/api/users/`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/`;
     const response = await fetch(url, {
       method: 'put',
       body: JSON.stringify({
@@ -185,7 +185,7 @@ export const useUser = (token) => {
     }
 
     async function getUser() {
-      const url = `${process.env.REACT_APP_USER_API_HOST}/api/users/`;
+      const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/`;
       const response = await fetch(url, {
         credentials: 'include',
       });

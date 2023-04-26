@@ -8,7 +8,7 @@ const MealEditPage = () => {
   const { mealId } = useParams();
   const navigate = useNavigate();
   const editMeal = async (mealIn) => {
-    const mealUrl = `${process.env.REACT_APP_USER_API_HOST}/api/meals/${mealId}/`;
+    const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`;
     const response = await fetch(mealUrl, {
       method: 'PUT',
       headers: {
@@ -25,7 +25,7 @@ const MealEditPage = () => {
     }
   };
   const fetchMeal = async () => {
-    const mealUrl = `${process.env.REACT_APP_USER_API_HOST}/api/meals/${mealId}/`;
+    const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`;
     const response = await fetch(mealUrl);
     if (response.ok) {
       const meal = await response.json();

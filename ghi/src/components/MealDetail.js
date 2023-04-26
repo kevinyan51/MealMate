@@ -20,15 +20,18 @@ import { useParames } from 'react-router-dom';
 const MealDetail = ({ mealId }) => {
   const navigate = useNavigate();
   const [meal, setMeal] = useState({});
-  const mealUrl = `${process.env.REACT_APP_USER_API_HOST}/api/meals/${mealId}/`;
+  const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`;
   const editMeal = () => {
     navigate(`/meals/${mealId}/edit`);
   };
 
   const deleteMeal = async () => {
-    await fetch(`${process.env.REACT_APP_USER_API_HOST}/api/meals/${mealId}/`, {
-      method: 'DELETE',
-    });
+    await fetch(
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`,
+      {
+        method: 'DELETE',
+      }
+    );
     navigate(`/meals`);
   };
   const modalContent = {
@@ -76,7 +79,7 @@ const MealDetail = ({ mealId }) => {
 
   const fetchChefMeals = async (chefId) => {
     const response = await fetch(
-      `${process.env.REACT_APP_USER_API_HOST}/api/users/${chefId}/meals/`
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${chefId}/meals/`
     );
     if (!response.ok) {
       throw new Error('Error getting chef meals');
@@ -203,7 +206,7 @@ export default MealDetail;
 //   };
 
 //   const deleteMeal = async () => {
-//     await fetch(`${process.env.REACT_APP_USER_API_HOST}/api/meals/${mealId}/`, {
+//     await fetch(`${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`, {
 //       method: 'DELETE',
 //     });
 //     navigate(`/meals`);
