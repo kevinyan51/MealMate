@@ -9,7 +9,7 @@ from queries.meal_details import (
 router = APIRouter()
 
 
-@router.get("/meals/{meals_id}/", response_model=Optional[MealOut])
+@router.get("/meals/{meals_id}", response_model=Optional[MealOut])
 def get_one_meal(
     meals_id: int,
     response: Response,
@@ -22,7 +22,7 @@ def get_one_meal(
 
 
 @router.get(
-    "/users/{chef_id}/meals/{meals_id}/", response_model=Optional[MealOut]
+    "/users/{chef_id}/meals/{meals_id}", response_model=Optional[MealOut]
 )
 def get_one_meal_chef(
     meals_id: int,

@@ -5,7 +5,7 @@ from queries.reviews import Error, ReviewIn, ReviewOut, ReviewRepo
 router = APIRouter()
 
 
-@router.get("/reviews/", response_model=Union[List[ReviewOut], Error])
+@router.get("/reviews", response_model=Union[List[ReviewOut], Error])
 def get_all_reviews(
     resp: Response,
     repo: ReviewRepo = Depends(),
@@ -16,7 +16,7 @@ def get_all_reviews(
     return result
 
 
-@router.post("/reviews/", response_model=Union[ReviewOut, Error])
+@router.post("/reviews", response_model=Union[ReviewOut, Error])
 def create_review(
     review: ReviewIn,
     resp: Response,
@@ -29,7 +29,7 @@ def create_review(
 
 
 @router.get(
-    "/users/{user_id}/reviews/", response_model=Union[List[ReviewOut], Error]
+    "/users/{user_id}/reviews", response_model=Union[List[ReviewOut], Error]
 )
 def get_reviews_by_subscriber(
     review_id: int,
@@ -43,7 +43,7 @@ def get_reviews_by_subscriber(
 
 
 @router.get(
-    "/meals/{meal_id}/reviews/", response_model=Union[List[ReviewOut], Error]
+    "/meals/{meal_id}/reviews", response_model=Union[List[ReviewOut], Error]
 )
 def get_reviews_by_meal(
     meal_id: int,
@@ -56,7 +56,7 @@ def get_reviews_by_meal(
     return result
 
 
-@router.get("/reviews/{review_id}/", response_model=Union[ReviewOut, Error])
+@router.get("/reviews/{review_id}", response_model=Union[ReviewOut, Error])
 def get_one_review(
     review_id: int,
     resp: Response,
@@ -68,7 +68,7 @@ def get_one_review(
     return result
 
 
-@router.put("/reviews/{review_id}/", response_model=Union[ReviewOut, Error])
+@router.put("/reviews/{review_id}", response_model=Union[ReviewOut, Error])
 def update_review(
     review_id: int,
     review: ReviewIn,
@@ -81,7 +81,7 @@ def update_review(
     return result
 
 
-@router.delete("/reviews/{review_id}/", response_model=Union[ReviewOut, Error])
+@router.delete("/reviews/{review_id}", response_model=Union[ReviewOut, Error])
 def delete_review(
     review_id: int,
     resp: Response,

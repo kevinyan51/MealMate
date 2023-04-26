@@ -50,7 +50,7 @@ async def create_user(
             detail="Cannot create user",
         )
     form = AccountForm(username=info.username, password=info.password)
-    print(account)
+    # print(account)
     token = await authenticator.login(response, request, form, repo)
     return AccountToken(account=account, **token.dict())
 

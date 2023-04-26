@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Col, Container, Modal, Row } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import { Box, Grid } from '@mui/material';
 // import {
 //   faSeedling,
@@ -20,14 +20,14 @@ import { useParames } from 'react-router-dom';
 const MealDetail = ({ mealId }) => {
   const navigate = useNavigate();
   const [meal, setMeal] = useState({});
-  const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`;
+  const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`;
   const editMeal = () => {
     navigate(`/meals/${mealId}/edit`);
   };
 
   const deleteMeal = async () => {
     await fetch(
-      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`,
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`,
       {
         method: 'DELETE',
       }
@@ -79,13 +79,13 @@ const MealDetail = ({ mealId }) => {
 
   const fetchChefMeals = async (chefId) => {
     const response = await fetch(
-      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${chefId}/meals/`
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${chefId}/meals`
     );
     if (!response.ok) {
       throw new Error('Error getting chef meals');
     }
     const data = await response.json();
-    console.log('meals', data);
+    // console.log('meals', data);
     let cMeals = [...data.filter((m) => m.meal_id != mealId)];
     setChefMeals(cMeals.length > 5 ? cMeals.slice(0, 5) : cMeals);
   };
@@ -206,7 +206,7 @@ export default MealDetail;
 //   };
 
 //   const deleteMeal = async () => {
-//     await fetch(`${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`, {
+//     await fetch(`${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`, {
 //       method: 'DELETE',
 //     });
 //     navigate(`/meals`);

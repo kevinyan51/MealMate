@@ -13,7 +13,7 @@ router = APIRouter()
 #     return repo.get_all()
 
 
-@router.get("/meals/", response_model=Union[List[MealOut], Error])
+@router.get("/meals", response_model=Union[List[MealOut], Error])
 def get_all_meals(
     resp: Response,
     repo: MealRepo = Depends(),
@@ -26,7 +26,7 @@ def get_all_meals(
 
 
 @router.get(
-    "/users/{user_id}/meals/", response_model=Union[List[MealOut], Error]
+    "/users/{user_id}/meals", response_model=Union[List[MealOut], Error]
 )
 def get_meals_by_chef(
     user_id: int,
