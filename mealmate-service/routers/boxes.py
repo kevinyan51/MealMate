@@ -6,7 +6,7 @@ from queries.boxes import Error, BoxInOut, BoxRepo
 router = APIRouter()
 
 
-@router.get("/users/{user_id}/box_id/", response_model=Union[int, Error])
+@router.get("/users/{user_id}/box_id", response_model=Union[int, Error])
 def get_user_box_id(
     user_id: int,
     resp: Response,
@@ -18,7 +18,7 @@ def get_user_box_id(
     return result
 
 
-@router.get("/boxes/{box_id}/", response_model=Union[BoxInOut, Error])
+@router.get("/boxes/{box_id}", response_model=Union[BoxInOut, Error])
 def get_one_box(
     box_id: int,
     resp: Response,
@@ -30,7 +30,7 @@ def get_one_box(
     return result
 
 
-@router.put("/boxes/{box_id}/", response_model=Union[BoxInOut, Error])
+@router.put("/boxes/{box_id}", response_model=Union[BoxInOut, Error])
 def update_box(
     box_id: int,
     box: BoxInOut,
