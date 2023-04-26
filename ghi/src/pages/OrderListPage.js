@@ -144,7 +144,7 @@ const OrderListPage = () => {
   //   user: { id: userId },
   // } = useAuth();
   const fetchUserOrders = async () => {
-    const url = `${process.env.REACT_APP_MEALMATE_API_HOST}/api/users/${userId}/orders`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${userId}/orders`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();

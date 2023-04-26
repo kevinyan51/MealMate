@@ -132,7 +132,7 @@ const Review = () => {
   const { mealId } = useParams();
   const loadReviews = async () => {
     const response = await fetch(
-      `${process.env.REACT_APP_MEALMATE_API_HOST}/api/meals/${
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${
         mealId ?? 7
       }/reviews/`
     );
