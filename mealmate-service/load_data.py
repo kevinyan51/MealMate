@@ -476,7 +476,7 @@ def load_data():
                     """
                 )
 
-                print("***********Data loaded************")
+                # print("***********Data loaded************")
     except Exception as e:
         # print(e)
         return {"message": "Data not loaded"}
