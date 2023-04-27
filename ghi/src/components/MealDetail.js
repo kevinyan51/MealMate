@@ -32,7 +32,7 @@ const MealDetail = ({ mealId }) => {
         method: 'DELETE',
       }
     );
-    navigate(`/meals`);
+    navigate(`/home`);
   };
   const modalContent = {
     edit: {
