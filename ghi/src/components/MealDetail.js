@@ -15,17 +15,16 @@ import Rating from './Rating';
 import { Typography } from '@mui/material';
 import ButtonModal from './ButtonModal';
 import MealCard from './MealCard';
-import { useParames } from 'react-router-dom';
 import { useToken } from '../components/Auth';
 
 const MealDetail = ({ mealId }) => {
+  const { user } = useToken();
   const navigate = useNavigate();
   const [meal, setMeal] = useState({});
   const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`;
   const editMeal = () => {
     navigate(`/meals/${mealId}/edit`);
   };
-  const { user } = useToken();
 
   const deleteMeal = async () => {
     await fetch(
@@ -108,11 +107,13 @@ const MealDetail = ({ mealId }) => {
             </Card.Title>
             <Card.Subtitle>{meal.name2}</Card.Subtitle>
           </div>
-          <Box sx={{ display: 'flex' }}>
-            <ButtonModal {...modalContent.edit} />
-            <Box m={2}></Box>
-            <ButtonModal {...modalContent.delete} />
-          </Box>
+          {user?.role_id === 2 && (
+            <Box sx={{ display: 'flex' }}>
+              <ButtonModal {...modalContent.edit} />
+              <Box m={2}></Box>
+              <ButtonModal {...modalContent.delete} />
+            </Box>
+          )}
         </Card.Header>
 
         <Box sx={{ display: 'flex' }}>
@@ -175,8 +176,8 @@ const MealDetail = ({ mealId }) => {
           </Box>
           <Box sx={{ flex: 1, p: 2 }}>
             <Typography variant="h5" mt={3} mb={3}>
-              {user.role_id === 1 && 'Meals You Might Like'}
-              {user.role_id === 2 &&
+              {user?.role_id === 1 && 'Meals You Might Like'}
+              {user?.role_id === 2 &&
                 'Your Other Meals That Are Loved By Subscribers'}
             </Typography>
             <Grid container spacing={2}>
