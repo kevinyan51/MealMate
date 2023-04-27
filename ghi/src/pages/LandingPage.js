@@ -194,7 +194,10 @@ const LandingPage = () => {
                 {" "}
                 Cooked to Perfection
               </p>
-              <p>Our gourmet chefs do the prep, so you can do you</p>
+              <p>
+                Our <b>{chefCount}</b> gourmet chefs do the prep, so you can do
+                you!
+              </p>
               <Button
                 variant="contained"
                 size="large"
@@ -227,9 +230,6 @@ const LandingPage = () => {
               </p>
             </div>
           </div>
-        </div>
-        <div>
-          <h2>TOTALCHEFSSSSS: {chefCount}</h2>
         </div>
       </div>
       <div style={{ maxWidth: "300px", margin: "auto" }}>
