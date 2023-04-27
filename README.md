@@ -307,7 +307,7 @@ Output:
   “reviewer_last_name”: str,
   “picture_url” : str
 }
-This will get all the reviews by all users foran individual meal
+This will get all the reviews by all users for an individual meal
 
 ## Boxes
 
