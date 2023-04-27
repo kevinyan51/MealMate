@@ -83,6 +83,7 @@ const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
                       ? COLORS.lightGrayBg
                       : 'white',
                 }}
+                onClick={() => setSelectedOrderId(s.order_id)}
               >
                 <td style={{ paddingLeft: 20 }}>
                   <Link
