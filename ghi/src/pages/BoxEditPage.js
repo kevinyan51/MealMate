@@ -66,15 +66,14 @@ const BoxEditPage = () => {
 
   const getUserBox = async () => {
     // if (!userId) setUserId(1);
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${
-      user.id || 1
-    }/box_id`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${user.id}/box_id`;
     // console.log('url', url);
     const response = await fetch(url).catch((e) => {
       // console.log('error getting user box', e);
     });
     if (response.ok) {
       const data = await response.json();
+      console.log('data', data);
       setBoxId(data);
       await getOneBox(data);
     }
@@ -84,10 +83,8 @@ const BoxEditPage = () => {
   }, [user]);
   const [selectedMeal, setSelectedMeal] = useState(null);
 
-  const getOneBox = async () => {
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${
-      boxId || 1
-    }`;
+  const getOneBox = async (boxId) => {
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${boxId}`;
     const response = await fetch(url).catch((e) => {
       // console.log('error getting one box', e);
     });
