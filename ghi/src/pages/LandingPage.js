@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import { Carousel } from 'bootstrap'
-import { COLORS } from '../utils/constants';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import { Carousel } from "bootstrap";
+import { COLORS } from "../utils/constants";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [chefCount, setChefCount] = useState(null);
 
   const logIn = () => {
-    navigate(`/login`)
-  }
-  const signUp= () => {
-    navigate(`/signup`)
-  }
+    navigate(`/login`);
+  };
+  const signUp = () => {
+    navigate(`/signup`);
+  };
   const chefList = () => {
     navigate(`/cheflist`);
   };
-
 
   useEffect(() => {
     const fetchChefCount = async () => {
@@ -26,10 +25,8 @@ const LandingPage = () => {
           `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`
         );
         const users = await response.json();
-        const numChefs = users.filter((users) =>
-           users.role_id === 2
-        ).length;
-        console.log(numChefs)
+        const numChefs = users.filter((users) => users.role_id === 2).length;
+        console.log(numChefs);
         setChefCount(numChefs);
       } catch (error) {
         console.error(error);
