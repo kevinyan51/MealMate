@@ -8,7 +8,7 @@ export function getToken() {
 }
 
 export async function getTokenInternal() {
-  const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/token/`;
+  const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/token`;
   try {
     const response = await fetch(url, {
       credentials: 'include',
@@ -18,7 +18,7 @@ export async function getTokenInternal() {
       return { account: data?.account, access_token: data?.access_token };
     }
   } catch (e) {
-    console.error('error getting token', e);
+    // console.error("error getting token", e);
   }
   return { account: null, access_token: null };
 }
@@ -118,6 +118,7 @@ export function useToken() {
     roleId,
   }) {
     const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
+    // console.log(url); // CHECKING FOR DEBUG
     const response = await fetch(url, {
       method: 'post',
       body: JSON.stringify({
@@ -135,7 +136,7 @@ export function useToken() {
     });
     if (response.ok) {
       await login(username, password);
-      console.log('Signup Successful');
+      // console.log('Signup Successful');
     } else if (response.status >= 400 && response.status < 600) {
       const body = await response.json();
       throw Error(body.detail);
@@ -152,7 +153,7 @@ export function useToken() {
     email,
     pictureUrl
   ) {
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
     const response = await fetch(url, {
       method: 'put',
       body: JSON.stringify({
@@ -185,7 +186,7 @@ export const useUser = (token) => {
     }
 
     async function getUser() {
-      const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/`;
+      const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users`;
       const response = await fetch(url, {
         credentials: 'include',
       });

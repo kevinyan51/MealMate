@@ -192,7 +192,7 @@ class UserQueries:
                         ],
                     )
                     record = db.fetchone()
-                    print(record)
+                    # print(record)
                     return self.record_to_user_update(record)
         except Exception as e:
             print(e)

@@ -16,22 +16,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MealCard from '../components/MealCard';
 import { IconButton, Typography } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
+import { useToken } from '../components/Auth';
 
 const BoxEditPage = () => {
+  const { user } = useToken();
   const navigate = useNavigate();
   const [box, setBox] = useState({});
   const [showModal, setShowModal] = useState(false);
 
   const getAllMeals = async () => {
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals`;
     const response = await fetch(url).catch((e) => {
-      console.log('error getting all meals', e);
+      // console.log('error getting all meals', e);
     });
     if (response.ok) {
       const data = await response.json();
       return data;
     }
-    console.log('error getting all meals');
+    // console.log('error getting all meals');
     return [];
   };
   const handleAdd = (mealId) => {
@@ -59,35 +61,32 @@ const BoxEditPage = () => {
     setBox({ ...newBox, meals });
   };
 
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
   const [boxId, setBoxId] = useState(null);
 
   const getUserBox = async () => {
-    if (!userId) setUserId(1);
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${
-      userId || 1
-    }/box_id/`;
-    console.log('url', url);
+    // if (!userId) setUserId(1);
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${user.id}/box_id`;
+    // console.log('url', url);
     const response = await fetch(url).catch((e) => {
-      console.log('error getting user box', e);
+      // console.log('error getting user box', e);
     });
     if (response.ok) {
       const data = await response.json();
+      console.log('data', data);
       setBoxId(data);
-      await getOneBox(data);
+      if (data) await getOneBox(data);
     }
   };
   useEffect(() => {
-    getUserBox();
-  }, []);
+    if (user) getUserBox();
+  }, [user]);
   const [selectedMeal, setSelectedMeal] = useState(null);
 
-  const getOneBox = async () => {
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${
-      boxId || 1
-    }/`;
+  const getOneBox = async (boxId) => {
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${boxId}`;
     const response = await fetch(url).catch((e) => {
-      console.log('error getting one box', e);
+      // console.log('error getting one box', e);
     });
     const allMeals = await getAllMeals();
 
@@ -106,7 +105,7 @@ const BoxEditPage = () => {
     }
   };
   const saveBox = async () => {
-    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${boxId}/`;
+    const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/boxes/${boxId}`;
     let meals = [...box.meals.filter((meal) => meal.quantity > 0)];
     const response = await fetch(url, {
       method: 'PUT',
@@ -115,17 +114,39 @@ const BoxEditPage = () => {
       },
       body: JSON.stringify({ ...box, meals }),
     }).catch((e) => {
-      console.log('error saving box', e);
+      // console.log('error saving box', e);
     });
     if (response.ok) {
       return console.log('success');
     }
-    console.log('error');
+    // console.log('error');
+  };
+
+  const orderNow = async () => {
+    const postOrderUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/orders?box_id=${boxId}`;
+    const response = await fetch(postOrderUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({ box_id: boxId }),
+    }).catch((e) => {
+      console.log('error ordering box', e);
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('data', data);
+      navigate(`/my-orders/${data.order_id}`);
+    } else {
+      console.log('error ordering box; response not ok');
+    }
   };
 
   useEffect(() => {
-    if (boxId) getOneBox();
-  }, [boxId]);
+    if (user && user.role_id == 2) {
+      navigate('/home');
+    }
+  }, [user]);
 
   return (
     <Box p={4}>
@@ -136,7 +157,14 @@ const BoxEditPage = () => {
         <Button variant="outlined" onClick={saveBox} sx={{ mr: 2 }}>
           save box
         </Button>
-        <Button variant="contained" sx={{ color: 'white' }}>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await saveBox();
+            await orderNow();
+          }}
+          sx={{ color: 'white' }}
+        >
           order now
         </Button>
       </Box>

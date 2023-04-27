@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/users/{user_id}/orders/", response_model=Union[List[OrderOut], Error]
+    "/users/{user_id}/orders", response_model=Union[List[OrderOut], Error]
 )
 def get_orders_by_subscriber(
     user_id: int,
@@ -19,7 +19,7 @@ def get_orders_by_subscriber(
     return result
 
 
-@router.get("/orders/", response_model=Union[List[OrderOut], Error])
+@router.get("/orders", response_model=Union[List[OrderOut], Error])
 def get_all_orders(
     resp: Response,
     repo: OrderRepo = Depends(),
@@ -30,19 +30,22 @@ def get_all_orders(
     return result
 
 
-@router.post("/orders/", response_model=Union[OrderOut, Error])
+@router.post("/orders", response_model=Union[OrderOut, Error])
 def create_order(
     box_id: int,
     resp: Response,
     repo: OrderRepo = Depends(),
 ):
+    print("-=========================")
+    print("box_id", box_id)
+    print("-=========================")
     result = repo.create(box_id)
     if result is None:
         resp.status_code = 500
     return result
 
 
-@router.get("/orders/{order_id}/", response_model=Union[OrderOut, Error])
+@router.get("/orders/{order_id}", response_model=Union[OrderOut, Error])
 def get_one_order(
     order_id: int,
     resp: Response,
@@ -55,7 +58,7 @@ def get_one_order(
 
 
 @router.get(
-    "/users/{user_id}/orders/meals/{meal_id}/",
+    "/users/{user_id}/orders/meals/{meal_id}",
     response_model=Union[bool, Error],
 )
 def check_if_subscriber_ordered_meal(

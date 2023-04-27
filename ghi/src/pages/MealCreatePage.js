@@ -16,11 +16,11 @@ const MealCreatePage = ({
   const [instruction, setInstruction] = useState('');
   const [ingredient, setIngredient] = useState('');
   const [calorie, setCalorie] = useState('');
-  const [keto, setKeto] = useState('');
-  const [vegan, setVegan] = useState('');
-  const [choice, setChoice] = useState('');
-  const [spicy, setSpicy] = useState('');
-  const [cheese, setCheese] = useState('');
+  const [keto, setKeto] = useState(false);
+  const [vegan, setVegan] = useState(false);
+  const [choice, setChoice] = useState(false);
+  const [spicy, setSpicy] = useState(false);
+  const [cheese, setCheese] = useState(false);
   const [price, setPrice] = useState(9.99);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const MealCreatePage = ({
     if (buttonAction) {
       return buttonAction(data);
     }
-    const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/`;
+    const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals`;
     const fetchConfig = {
       method: 'POST',
       body: JSON.stringify(data),

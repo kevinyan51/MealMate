@@ -66,7 +66,7 @@ class MealDetailsRepository:
                         [meals_id],
                     )
                     record = result.fetchone()
-                    print("record *************", record)
+                    # print("record *************", record)
                     if record is None:
                         return None
                     return self.record_to_meal_out(record)
@@ -136,7 +136,7 @@ class ChefMealDetailsRepository:
                         [meals_id, chef_id],
                     )
                     record = result.fetchone()
-                    print("record *************", record)
+                    # print("record *************", record)
                     if record is None:
                         return None
                     return self.chef_record_to_meal_out(record)

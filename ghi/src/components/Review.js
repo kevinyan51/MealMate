@@ -13,6 +13,8 @@ import Avatar from '@mui/material/Avatar';
 import { grey } from '@mui/material/colors';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import { useToken } from '../components/Auth.js';
+// import LandingPage from '../pages/LandingPage.js';
 
 const RatingInput = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -127,6 +129,7 @@ const RatingInputCard = ({ rating, setRating }) => {
 };
 
 const Review = () => {
+  const { user } = useToken();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const { mealId } = useParams();
@@ -134,7 +137,7 @@ const Review = () => {
     const response = await fetch(
       `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${
         mealId ?? 7
-      }/reviews/`
+      }/reviews`
     );
     if (response.ok) {
       const data = await response.json();
@@ -153,9 +156,13 @@ const Review = () => {
       align="center"
     >
       <Typography variant="h4" fontWeight="bold" align="center" p={5}>
-        See how our customers like this meal
+        {!user && 'See how subscribers like this meal'}
+        {user?.role_id === 1 && 'See how other subscribers like this meal'}
+        {user?.role_id === 2 && 'See how your subscribers like this meal'}
       </Typography>
-      <RatingInputCard rating={rating} setRating={setRating} />
+      {user?.role_id === 1 && (
+        <RatingInputCard rating={rating} setRating={setRating} />
+      )}
       <Grid
         container
         // spacing={{ xs: 2, sm: 2, md: 3 }}

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Col, Container, Modal, Row } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import { Box, Grid } from '@mui/material';
 // import {
 //   faSeedling,
@@ -15,24 +15,25 @@ import Rating from './Rating';
 import { Typography } from '@mui/material';
 import ButtonModal from './ButtonModal';
 import MealCard from './MealCard';
-import { useParames } from 'react-router-dom';
+import { useToken } from '../components/Auth';
 
 const MealDetail = ({ mealId }) => {
+  const { user } = useToken();
   const navigate = useNavigate();
   const [meal, setMeal] = useState({});
-  const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`;
+  const mealUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`;
   const editMeal = () => {
     navigate(`/meals/${mealId}/edit`);
   };
 
   const deleteMeal = async () => {
     await fetch(
-      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`,
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`,
       {
         method: 'DELETE',
       }
     );
-    navigate(`/meals`);
+    navigate(`/home`);
   };
   const modalContent = {
     edit: {
@@ -79,13 +80,13 @@ const MealDetail = ({ mealId }) => {
 
   const fetchChefMeals = async (chefId) => {
     const response = await fetch(
-      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${chefId}/meals/`
+      `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${chefId}/meals`
     );
     if (!response.ok) {
       throw new Error('Error getting chef meals');
     }
     const data = await response.json();
-    console.log('meals', data);
+    // console.log('meals', data);
     let cMeals = [...data.filter((m) => m.meal_id != mealId)];
     setChefMeals(cMeals.length > 5 ? cMeals.slice(0, 5) : cMeals);
   };
@@ -106,11 +107,13 @@ const MealDetail = ({ mealId }) => {
             </Card.Title>
             <Card.Subtitle>{meal.name2}</Card.Subtitle>
           </div>
-          <Box sx={{ display: 'flex' }}>
-            <ButtonModal {...modalContent.edit} />
-            <Box m={2}></Box>
-            <ButtonModal {...modalContent.delete} />
-          </Box>
+          {user?.role_id === 2 && (
+            <Box sx={{ display: 'flex' }}>
+              <ButtonModal {...modalContent.edit} />
+              <Box m={2}></Box>
+              <ButtonModal {...modalContent.delete} />
+            </Box>
+          )}
         </Card.Header>
 
         <Box sx={{ display: 'flex' }}>
@@ -173,7 +176,9 @@ const MealDetail = ({ mealId }) => {
           </Box>
           <Box sx={{ flex: 1, p: 2 }}>
             <Typography variant="h5" mt={3} mb={3}>
-              Meals You Might Like
+              {user?.role_id === 1 && 'Meals You Might Like'}
+              {user?.role_id === 2 &&
+                'Your Other Meals That Are Loved By Subscribers'}
             </Typography>
             <Grid container spacing={2}>
               {chefMeals.map((meal) => (
@@ -206,7 +211,7 @@ export default MealDetail;
 //   };
 
 //   const deleteMeal = async () => {
-//     await fetch(`${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}/`, {
+//     await fetch(`${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/meals/${mealId}`, {
 //       method: 'DELETE',
 //     });
 //     navigate(`/meals`);

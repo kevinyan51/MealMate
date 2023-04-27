@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import ChefMealDetailPage from './ChefMealDetailPage.js';
 import SubscriberMealDetailPage from './SubscriberMealDetailPage.js';
 import Review from '../components/Review.js';
+import { useToken } from '../components/Auth.js';
 
 const MealDetailPage = () => {
-  const [role, setRole] = useState(2);
+  const { user } = useToken();
   return (
     <>
-      {role === 2 ? <ChefMealDetailPage /> : <SubscriberMealDetailPage />}
+      {user?.role_id === 2 ? (
+        <ChefMealDetailPage />
+      ) : (
+        <SubscriberMealDetailPage />
+      )}
       <Review />
     </>
   );
