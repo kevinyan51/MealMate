@@ -14,6 +14,9 @@ const LandingPage = () => {
   const signUp= () => {
     navigate(`/signup`)
   }
+  const chefList = () => {
+    navigate(`/cheflist`);
+  };
 
 
   useEffect(() => {
@@ -201,7 +204,7 @@ const LandingPage = () => {
               <Button
                 variant="contained"
                 size="large"
-                onClick={signUp}
+                onClick={chefList}
                 style={{
                   display: "block",
                   margin: "auto",
@@ -210,7 +213,7 @@ const LandingPage = () => {
                   color: "white",
                 }}
               >
-                Get Started
+                Meet our Chefs
               </Button>
             </div>
             <div className="col-sm text-center">
