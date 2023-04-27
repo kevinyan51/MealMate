@@ -9,6 +9,7 @@ const UserProfilePage = () => {
   const [firstName, setFirstName] = useState(user?.first_name);
   const [lastName, setLastName] = useState(user?.last_name);
   const [email, setEmail] = useState(user?.email);
+  const [password, setPassword] = useState('');
   const [emailValid, setEmailValid] = useState(true);
   const [success, setSuccess] = useState(false);
 
@@ -35,10 +36,40 @@ const UserProfilePage = () => {
     setLastName(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission here
-    setSuccess(true);
+
+    const payload = {
+      firstname: firstName,
+      last_name: lastName,
+      email,
+      picture_url: selectedAvatar,
+      password,
+    };
+
+    try {
+      const updateUserUrl = `${process.env.REACT_APP_API_URL}/api/users/${user?.id}`;
+      const response = await fetch(updateUserUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to update user profile');
+      }
+
+      setSuccess(true);
+    } catch (error) {
+      console.error(error);
+      setSuccess(false);
+    }
   };
 
   return (
@@ -56,7 +87,6 @@ const UserProfilePage = () => {
                 className="form-control"
                 id="userId"
                 defaultValue={user?.id}
-                // readOnly
                 disabled
               />
             </div>
@@ -69,7 +99,7 @@ const UserProfilePage = () => {
                 className="form-control"
                 id="username"
                 defaultValue={user?.username}
-                required
+                readOnly
               />
             </div>
             <div className="mb-3">
@@ -82,7 +112,6 @@ const UserProfilePage = () => {
                 id="firstName"
                 defaultValue={user?.first_name}
                 onChange={handleFirstNameChange}
-                required
               />
             </div>
             <div className="mb-3">
@@ -95,7 +124,6 @@ const UserProfilePage = () => {
                 id="lastName"
                 defaultValue={user?.last_name}
                 onChange={handleLastNameChange}
-                required
               />
             </div>
             <div className="mb-3">
@@ -115,40 +143,51 @@ const UserProfilePage = () => {
               </div>
             </div>
             <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password:
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <div className="mb-3">
               <label htmlFor="pictureUrl" className="form-label">
                 Select Avatar:
               </label>
-              <div className="d-flex flex-row">
+              <div className="d-flex flex-wrap mb-2">
                 {avatarOptions.map((url) => (
-                  <img
+                  <div
                     key={url}
-                    src={url}
-                    alt="avatar option"
-                    height="50"
-                    width="50"
-                    className={`ms-2 ${
-                      url === selectedAvatar ? 'border border-primary' : ''
+                    className={`avatar-option mx-2 my-1 ${
+                      selectedAvatar === url ? 'selected' : ''
                     }`}
                     onClick={() => setSelectedAvatar(url)}
-                  />
+                  >
+                    <img src={url} alt="Avatar" className="rounded-circle" />
+                  </div>
                 ))}
               </div>
             </div>
+
             <div className="d-grid">
               <button
                 type="submit"
                 className="btn btn-success"
-                disabled={!emailValid}
+                disabled={!emailValid || firstName === '' || lastName === ''}
               >
                 Update Profile
               </button>
             </div>
+            {success && (
+              <div className="alert alert-success mt-3" role="alert">
+                Your profile has been updated successfully!
+              </div>
+            )}
           </form>
-          {success && (
-            <div className="alert alert-success mt-3" role="alert">
-              Your profile has been updated!
-            </div>
-          )}
         </Col>
       </Row>
     </Container>
