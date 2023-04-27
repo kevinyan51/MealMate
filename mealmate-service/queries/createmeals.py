@@ -152,7 +152,7 @@ class MealRepository:
                     )
                     return self.meal_in_to_out(meal_id, meal)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Could not update meal"}
 
     def meal_in_to_out(self, id: int, meal: MealIn):
@@ -173,5 +173,5 @@ class MealRepository:
                     )
                     return True
         except Exception as e:
-            # print(e)
+            print(e)
             return False

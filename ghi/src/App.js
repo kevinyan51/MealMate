@@ -15,11 +15,13 @@ import OrderDetailPage from './pages/OrderDetailPage.js';
 import { Box } from '@mui/material';
 import UserProfilePage from './pages/UserProfilePage';
 import DashboardPage from './pages/DashboardPage';
+import { useToken } from './components/Auth';
 
 const domain = /https:\/\/[^/]+/;
 const basename = process.env.PUBLIC_URL.replace(domain, '');
 
 const NavbarWrapper = () => {
+  const { user } = useToken();
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Nav />

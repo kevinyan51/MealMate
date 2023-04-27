@@ -10,6 +10,8 @@ import {
   Shop,
 } from '@mui/icons-material';
 import { COLORS } from '../utils/constants';
+import { useToken } from '../components/Auth';
+
 const TopRowIcons = ({ infoArray }) => {
   return (
     <Box sx={{ display: 'flex', flex: 1, justifyContent: 'space-around' }}>
@@ -138,7 +140,9 @@ const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
   );
 };
 const OrderListPage = () => {
-  const [userId, setUserId] = useState(15);
+  // const [userId, setUserId] = useState(13);
+  const { user } = useToken();
+  const userId = user?.id;
   const [orders, setOrders] = useState([]);
   // const {
   //   user: { id: userId },
@@ -176,15 +180,18 @@ const OrderListPage = () => {
         {
           icon: () => <AttachMoneyIcon sx={{ color: 'white' }} />,
           text: 'Total Savings',
-          number: `$${
+          number: `$${(
             orders.reduce((acc, cur) => acc + cur.num_meals, 0) *
-            (16 - 9.99).toFixed(2)
-          }`,
+            (16 - 9.99)
+          ).toFixed(2)}`,
           bgcolor: COLORS.red,
         },
       ]);
     }
   }, [orders]);
+  if (!userId) {
+    return null;
+  }
   return (
     <Box sx={{ p: 7 }}>
       <Box sx={{ display: 'flex' }}>

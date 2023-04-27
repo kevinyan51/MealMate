@@ -1,171 +1,347 @@
-# MealMate
+Intended market
 
-A meal subscription service platform
+We are targeting both chefs and people who are interested in pre-made microwave meals. In our website users can either become a subscriber who can order meals prepared by our gourmet chefs or they can become a chef and sell their own meals. The chef's meals are then reviewed by users and ranked in order to see the best handcrafted meals by the chef.
 
-## Team
+Functionality
 
-- Caio Lima
-- Jamie Liu
-- Kevin Yan
-- Mason McInerny
+Non logged in users arrive at a landing page that prompts them to either sign in or “get started” which is the phrase used to select create an account
+Upon signup, users can either choose to become a chef or a subscriber.
+Subscribers are assigned a box on signup which contains every meal that has been created.
+Subscribers on sign in are redirected to the box page.
+Subscribers can then edit their box based on which meals they would like and also the quantity.
+The meals themselves have further indications depending on their dietary needs.
+They can click on meal details by selecting the button with three dots. Once selected it gives a detailed description of the meal and also the ingredients. On the side of this detailed description there are more recommended meals.
+Below this are reviews from users about the selected meals.
+The subscriber can then save their box after their desired meal and respective quantities are selected.
+The subscribers can also click on my orders to check out their previous orders and the status of their orders. When they click on an individual order they can see the contents of a box they previously made.
+If a user signs up as a chef they have the option of adding a new meal.
+When adding a meal the chef has the ability to add a meal using their chef id, can add a name for a meal, add a subtitle for the meal, add a picture url of the meal, the calores, a description of the meal, the instructions for cooking the meal, the ingredients of the meal, the dietary labels there meal has or contains, and finally the price of the meal
+Both users have a profile button when selecting their avatar on the right hand side of the website. In this section it shows basic account information described on the signup portion. They also have to the ability to change there avatars and also update the account information.
 
-## Features
+Project Initialization
 
-## Design
+To fully enjoy this application on your local machine, please make sure to follow these steps:
+Clone the repository down to your local machine
+CD into the new project directory
+Run docker volume create postgres-data
+Run docker compose build
+Run docker compose up
+Optional for preloaded data:
+In the docker container ‘mealmate-service-1’, run python -m load_data
 
-## Initialization (for the team)
 
-- Clone repo git clone https://gitlab.com/culinarycoders/mealmate
-- `cd` into new project directory
-- Run `docker volume create pg-admin`
-- Run `docker volume create postgres-data`
-- Run `docker compose build`
-- Run `docker compose up`
-- Access the frontend: http://localhost:3000
-- Access the backend: http://localhost:8000/docs
 
-## Getting started
+APIs
 
-You have a project repository, now what? The next section
-lists all of the deliverables that are due at the end of the
-week. Below is some guidance for getting started on the
-tasks for this week.
+Meals
 
-## Install Extensions
+Method: POST, GET, GET, PUT, DELETE,
 
-- Prettier: <https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode>
-- Black Formatter: <https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter>
+Path: /api/meals/
 
-## Deliverables
+POST: Input:
+{
+  "name": string,
+  "name2": string,
+  "picture_url": string,
+  "description": string,
+  "instructions": string,
+  "ingredients": string,
+  "chef_id": int,
+  "calories": int,
+  "is_keto": bool,
+  "is_vegan": bool,
+  "Is_chef_choice": bool,
+  "is_spicy": bool,
+  "has_cheese": bool,
+  "price": float/int,
+}
+Output:
+{
+  “id”: int,
+  "name": string,
+  "name2": string,
+  "picture_url": string,
+  "description": string,
+  "instructions": string,
+  "ingredients": string,
+  "chef_id": int,
+  "calories": int,
+  "is_keto": bool,
+  "is_vegan": bool,
+  "Is_chef_choice": bool,
+  "is_spicy": bool,
+  "has_cheese": bool,
+  "price": float/int,
+}
+Creating a meal saves each of these fields and passes in an id. It will add a meal and allows the subscriber to select its quantity in their box so the subscriber can order. The id helps identify the meal for when subscribers want to view the details of the respective meal.
 
-- [ ] Wire-frame diagrams
-- [ ] API documentation
-- [ ] Project is deployed to Render.com/GitLab-pages
-- [ ] GitLab issue board is setup and in use
-- [ ] Journals
+Path: /api/meals/<int:pk>/
+GET: Input:
+{
+“Id”: int
+}
+Output:
+{
+  “id”: int,
+  "name": string,
+  "name2": string,
+  "picture_url": string,
+  "description": string,
+  "instructions": string,
+  "ingredients": string,
+  "chef_id": int,
+  "calories": int,
+  "is_keto": bool,
+  "is_vegan": bool,
+  "Is_chef_choice": bool,
+  "is_spicy": bool,
+  "has_cheese": bool,
+  "price": float/int,
+}
+Additionally a get request at:
+Path: /api/meals/
+Will have the output of each meal that exists within the database.
 
-## Project layout
+Users
 
-The layout of the project is just like all of the projects
-you did with `docker-compose` in module #2. You will create
-a directory in the root of the repository for each service
-that you add to your project just like those previous
-projects were setup.
+Method: GET, POST, PUT, DELETE
 
-### Directories
 
-Several directories have been added to your project. The
-directories `docs` and `journals` are places for you and
-your team-mates to, respectively, put any documentation
-about your project that you create and to put your
-project-journal entries. See the _README.md_ file in each
-directory for more info.
+Path: /api/users, /api/users/<int:pk>
+Input:
+{
+  "first_name": string,
+  "last_name": string,
+  “username”: string,
+  "email": string,
+  "password": string,
+  "role_id”: int,
+}
+Output:
+{
+  "first_name": string,
+  "last_name": string,
+  “username”: string,
+  "email": string,
+  "password": string,
+  "role_id”: int,
+}
+The Users API will create, or delete an account for a user on the Meal Mate website. Users will need to enter in all of the information listed to create an account. The role_id int field will be to determine whether an account has access to chefs or subscribers pages.
 
-The other directories, `ghi` and `sample_service`, are
-sample services, that you can start building off of or use
-as a reference point.
 
-Inside of `ghi` is a minimal React app that has an "under
-construction" page. It is setup similarly to all of the
-other React projects that you have worked on.
+Orders
 
-Inside of `sample_service` is a minimal FastAPI application.
-"Where are all the files?" you might ask? Well, the
-`main.py` file is the whole thing, and go take look inside
-of it... There's not even much in there..., hmm? That is
-FastAPI, we'll learn more about it in the coming days. Can
-you figure out what this little web-application does even
-though you haven't learned about FastAPI yet?
+Method: POST, DELETE,GET,GET,GET,GET
+Path: /api/users/{user_id}/orders,
+Input:
+{
+  "userr_id": int,
+  “order_status”: str
+}
+Output:
+{
+  "order_id": int,
+  "order_status": str,
+  "order_created_at": datetime,
+  "order_updated_at": datetime,
+  “subscriber_id”: int,
+  “num_meals”: int,
+  “total_price”: float,
+  “meals”: List,
 
-Also in `sample_service` is a directory for your migrations.
-If you choose to use PostgreSQL, then you'll want to use
-migrations to control your database. Unlike Django, where
-migrations were automatically created for you, you'll write
-yours by hand using DDL. Don't worry about not knowing what
-DDL means; we have you covered. There's a sample migration
-in there that creates two tables so you can see what they
-look like.
+}
 
-The sample Dockerfile and Dockerfile.dev run your migrations
-for you automatically.
+This gets the orders by subscriber.
+Path: /api/orders
+Input:
+{
+}
+Output:
+{
+  "order_id": int,
+  "order_status": str,
+  "order_created_at": datetime,
+  "order_updated_at": datetime,
+  “subscriber_id”: int,
+  “num_meals”: int,
+  “total_price”: float,
+  “meals”: List,
 
-### Other files
+}
 
-The following project files have been created as a minimal
-starting point. Please follow the guidance for each one for
-a most successful project.
+This gets all the orders.
+Path: /api/orders
+Input:
+{
+  “box_id”: int
+}
+Output:
+{
+  "order_id": int,
+  "order_status": str,
+  "order_created_at": datetime,
+  "order_updated_at": datetime,
+  “subscriber_id”: int,
+  “num_meals”: int,
+  “total_price”: float,
+  “meals”: List,
 
-- `docker-compose.yaml`: there isn't much in here, just a
-  **really** simple UI and FastAPI service. Add services
-  (like a database) to this file as you did with previous
-  projects in module #2.
-- `.gitlab-ci.yml`: This is your "ci/cd" file where you will
-  configure automated unit tests, code quality checks, and
-  the building and deployment of your production system.
-  Currently, all it does is deploy an "under construction"
-  page to your production UI on GitLab and a sample backend
-  to Render.com. We will learn much more about this file.
-- `.gitignore`: This is a file that prevents unwanted files
-  from getting added to your repository, files like
-  `pyc` files, `__pycache__`, etc. We've set it up so that
-  it has a good default configuration for Python projects.
+}
 
-## How to complete the initial deploy
+This creates an order
+Path: /api/orders/{order_id}
+Input:
+{
+  “order_id”: int
+}
+Output:
+{
+  "order_id": int,
+  "order_status": str,
+  "order_created_at": datetime,
+  "order_updated_at": datetime,
+  “subscriber_id”: int,
+  “num_meals”: int,
+  “total_price”: float,
+  “meals”: List,
 
-There will be further guidance on completing the initial
-deployment, but it just consists of these steps:
+}
 
-### Setup GitLab repo/project
+This gets one order.
 
-- make sure this project is in a group. If it isn't, stop
-  now and move it to a GitLab group
-- remove the fork relationship: In GitLab go to:
+Path: /api/users/{user_id}/orders/meals/{meal_id}
+Input:
+{
+  “meal_id”: int,
+  “Subscriber_id”: int
+}
+Output:
+{
+ ‘true’ or ‘false’
+}
 
-  Settings -> General -> Advanced -> Remove fork relationship
 
-- add these GitLab CI/CD variables:
-  - PUBLIC_URL : this is your gitlab pages URL
-  - SAMPLE_SERVICE_API_HOST: enter "blank" for now
 
-#### Your GitLab pages URL
 
-You can't find this in GitLab until after you've done a deploy
-but you can figure it out yourself from your GitLab project URL.
+Reviews
 
-If this is your project URL
+Method: GET, POST, GET,  PUT, DELETE,
+Path: /api/reviews/, /api/reviews/<int:pk>
+Input:
+{
+  "subscriber_id”: int,
+  "meal_id": int,
+  "rating": int,
+  "comment": str
+}
+Output:
+{
+  "id”: int,
+  "review_status": str,
+  "subscriber_id": int,
+  "comment": str,
+  “meal_id”:int,
+  “created_at”: datetime,
+  “updated_at”: datetime,
+  “Rating”: int,
+  “comment”: str,
+  “reviewer_first_name”: str,
+  “reviewer_last_name”: str,
+  “Picture_url” : str
+}
 
-https://gitlab.com/GROUP_NAME/PROJECT_NAME
+This creates a review.
 
-then your GitLab pages URL will be
 
-https://GROUP_NAME.gitlab.io/PROJECT_NAME
+Get reviews by subscriber:
 
-### Create render.com account and application
+Path: /api/users/{user_id}/reviews/
 
-- create account on render.com
-- one person create a group and invite all other members
-- create a new "Web Service"
-  - authenticate with GitLab and choose your project
-  - Enter fields:
-    - Name: name of your service
-    - Root Directory: the directory of your service in your git repo.
-      For this example use "sample_service".
-    - Environment: Docker
-    - Plan Type: Free
-  - click the "Create Web Service" button to create it
-  - the build will succeed and it will look like the server is running,
-    most likely, in 6-10 minutes, it will fail.
-  - click "Manual Deploy" -> "Deploy latest commit" and the service
-    should deploy successfully.
+Input:
+{
+“User_id”: int,
+}
+Output:
+{
+  "id”: int,
+  "review_status": str,
+  "subscriber_id": int,
+  "comment": str,
+  “meal_id”:int,
+“created_at”: datetime,
+“updated_at”: datetime,
+“Rating”: int,
+“comment”: str,
+“reviewer_first_name”: str,
+“reviewer_last_name”: str,
+“Picture_url” : str
+}
 
-### Update GitLab CI/CD variables
+This will get all the reviews by an individual subscriber
 
-Copy the service URL for your new render.com service and then paste
-that into the value for the SAMPLE_SERVICE_API_HOST CI/CD variable
-in GitLab.
 
-### Deploy it
 
-Merge a change into main to kick off the initial deploy. Once the build pipeline
-finishes you should be able to see an "under construction" page on your GitLab
-pages site.
+Get reviews by Meal:
+
+Path: /api/meals/{meal_id}/reviews/
+
+input:
+{
+“meal_id”: int,
+}
+
+Output:
+{
+  "id”: int,
+  "review_status": str,
+  "subscriber_id": int,
+  "comment": str,
+  “meal_id”:int,
+  “created_at”: datetime,
+  “updated_at”: datetime,
+  “rating”: int,
+  “comment”: str,
+  “reviewer_first_name”: str,
+  “reviewer_last_name”: str,
+  “picture_url” : str
+}
+This will get all the reviews by all users foran individual meal
+
+Boxes
+
+Method: GET,PUT
+Path: /api/boxes}/{box_id}/
+{
+  "box_id": int,
+  "subscriber_id": int,
+  "subscriber_first_name": "string",
+  "subscriber_last_name": "string",
+  "meals": [
+    {
+      "meal_id": int,
+      "status_id": int,
+      "chef_id": int,
+      "name": "string",
+      "name2": "string",
+      "created_at": "datetime",
+      "updated_at": "datetime",
+      "picture_url": "string",
+      "description": "string",
+      "instructions": "string",
+      "ingredients": "string",
+      "calories": int,
+      "is_keto": bool,
+      "is_vegan": bool,
+      "is_chef_choice": bool,
+      "is_spicy": bool,
+      "Has_cheese": bool,
+      "price":  int,
+      "chef_first_name": "string",
+      "chef_last_name": "string",
+      "chef_picture_url": "string",
+      "quantity":  int
+    }
+  ]
+}
+This allow users to edit and create there box
