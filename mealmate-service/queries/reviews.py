@@ -49,6 +49,12 @@ class ReviewRepo:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
+                    # print(
+                    #     "++++++++++++++++++++++++++++review.subscriber_id: ",
+                    #     review.subscriber_id,
+                    # )
+                    # print("=======================================")
+                    # print(review)
                     cur.execute(
                         """
                         INSERT INTO reviews (
@@ -56,9 +62,10 @@ class ReviewRepo:
                             , meal_id
                             , rating
                             , comment
+                            , status_id
                         )
-                        VALUES (%s, %s, %s, %s)
-                        RETURNING id
+                        VALUES (%s, %s, %s, %s, 6)
+                        RETURNING *;
                         """,
                         (
                             review.subscriber_id,
@@ -67,14 +74,19 @@ class ReviewRepo:
                             review.comment,
                         ),
                     )
-                    review_id = cur.fetchone()[0]
+                    review = cur.fetchone()
+                    # print("++++++++++++++++++++++++++++review: ", review)
                     cur.execute(
                         """
-                        SELECT * FROM reviews WHERE id = %s
+                        SELECT r.*, u.first_name, u.last_name, u.picture_url
+                        FROM reviews r
+                        JOIN users u ON r.subscriber_id = u.id
+                        WHERE r.id = %s
                         """,
-                        (review_id),
+                        (review[0],),
                     )
                     rec = cur.fetchone()
+                    # print("++++++++++++++++++++++++++++rec: ", rec)
                     return self.record_to_review_out(rec)
 
         except Exception as e:
