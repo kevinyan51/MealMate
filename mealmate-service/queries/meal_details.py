@@ -71,7 +71,7 @@ class MealDetailsRepository:
                         return None
                     return self.record_to_meal_out(record)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Could not get meal details"}
 
     def record_to_meal_out(self, record):
@@ -141,7 +141,7 @@ class ChefMealDetailsRepository:
                         return None
                     return self.chef_record_to_meal_out(record)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Could not get meal details"}
 
     def chef_record_to_meal_out(self, record):

@@ -36,6 +36,9 @@ def create_order(
     resp: Response,
     repo: OrderRepo = Depends(),
 ):
+    print("-=========================")
+    print("box_id", box_id)
+    print("-=========================")
     result = repo.create(box_id)
     if result is None:
         resp.status_code = 500

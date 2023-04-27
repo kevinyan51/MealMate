@@ -37,6 +37,9 @@ class OrderOut(BaseModel):
 
 class OrderRepo:
     def create(self, box_id: int) -> Union[OrderOut, Error]:
+        print("---------------------------------")
+        print("box_id", box_id)
+        print("---------------------------------")
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
