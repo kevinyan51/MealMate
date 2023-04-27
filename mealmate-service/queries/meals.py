@@ -41,7 +41,8 @@ class MealRepo:
                         """
                         SELECT m.*, u.first_name, u.last_name, u.picture_url
                         FROM meals m
-                        JOIN users u on m.chef_id = u.id;
+                        JOIN users u on m.chef_id = u.id
+                        WHERE m.status_id = 6;
                         """
                     )
                     recs = cur.fetchall()
@@ -60,6 +61,7 @@ class MealRepo:
                         FROM meals m
                         JOIN users u on m.chef_id = u.id
                         WHERE m.chef_id = %s
+                        AND m.status_id = 6;
                         """,
                         [user_id],
                     )
