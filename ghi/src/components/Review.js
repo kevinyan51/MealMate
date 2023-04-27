@@ -87,6 +87,12 @@ const RatingDisplayCard = ({ review }) => {
 };
 
 const RatingInputCard = ({ rating, setRating }) => {
+  const [review, setReview] = useState('');
+  const postReview = () => {
+    // FIXME ADD REVIEW POSTING FUNCTIONALITY
+    alert('review posted');
+    setReview('');
+  };
   return (
     <Box
       sx={{
@@ -122,6 +128,16 @@ const RatingInputCard = ({ rating, setRating }) => {
           id="standard-basic"
           label="Share your experience here..."
           variant="standard"
+          value={review}
+          onChange={(event) => {
+            setReview(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              postReview();
+            }
+          }}
         />
       </Box>
     </Box>
