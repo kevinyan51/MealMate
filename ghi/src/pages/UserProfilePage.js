@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useToken } from '../components/Auth';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Avatar } from '@mui/material';
+// import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
   const { user } = useToken();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [selectedAvatar, setSelectedAvatar] = useState(user?.picture_url);
-  const [firstName, setFirstName] = useState(user?.first_name);
-  const [lastName, setLastName] = useState(user?.last_name);
-  const [email, setEmail] = useState(user?.email);
+  const [selectedAvatar, setSelectedAvatar] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailValid, setEmailValid] = useState(true);
   const [success, setSuccess] = useState(false);
 
-  const avatarOptions = [
+  const [avatarOptions, setAvatarOptions] = useState([
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Boy_headphones_lti3xz.png',
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Woman_j4rs6u.png',
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Woman_muslim_jf0peb.png',
@@ -23,7 +24,19 @@ const UserProfilePage = () => {
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Afroamerican_lb2kxl.png',
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Scientist_kqoouj.png',
     'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Girl_zj4ylc.png',
-  ];
+  ]);
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.first_name);
+      setLastName(user.last_name);
+      setEmail(user.email);
+      if (user.picture_url) {
+        setSelectedAvatar(user.picture_url);
+      } else {
+        setSelectedAvatar(avatarOptions[0]);
+      }
+    }
+  }, [user]);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -46,21 +59,44 @@ const UserProfilePage = () => {
     event.preventDefault();
 
     const payload = {
-      firstname: firstName,
+      first_name: firstName,
       last_name: lastName,
+      username: user?.username,
       email,
-      picture_url: selectedAvatar,
       password,
+      picture_url: selectedAvatar,
+      role_id: user?.role_id,
+
+      // class UserIn(BaseModel):
+      // first_name: str
+      // last_name: str
+      // username: str
+      // email: str
+      // password: str
+      // picture_url: str
+      // role_id: int
     };
 
     try {
-      const updateUserUrl = `${process.env.REACT_APP_API_URL}/api/users/${user?.id}`;
+      const updateUserUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${user?.id}`;
+      const formData = new FormData();
+      formData.append('first_name', firstName);
+      formData.append('last_name', lastName);
+      formData.append('username', user?.username);
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('picture_url', selectedAvatar);
+      formData.append('role_id', user?.role_id);
+      console.log('payload', payload);
       const response = await fetch(updateUserUrl, {
         method: 'PUT',
         headers: {
+          // credentials: 'include',
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify(payload),
+        // body: formData,
       });
       if (!response.ok) {
         throw new Error('Unable to update user profile');
@@ -91,6 +127,18 @@ const UserProfilePage = () => {
               />
             </div>
             <div className="mb-3">
+              <label htmlFor="userId" className="form-label">
+                User Role:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="userId"
+                defaultValue={user?.role_id === 1 ? 'Subscriber' : 'Chef'}
+                disabled
+              />
+            </div>
+            <div className="mb-3">
               <label htmlFor="username" className="form-label">
                 Username:
               </label>
@@ -99,7 +147,7 @@ const UserProfilePage = () => {
                 className="form-control"
                 id="username"
                 defaultValue={user?.username}
-                readOnly
+                disabled
               />
             </div>
             <div className="mb-3">
@@ -160,6 +208,7 @@ const UserProfilePage = () => {
               </label>
               <div className="d-flex flex-wrap mb-2">
                 {avatarOptions.map((url) => (
+                  // <Avatar alt="Avatar" src={url} key={url} />
                   <div
                     key={url}
                     className={`avatar-option mx-2 my-1 ${
@@ -169,7 +218,13 @@ const UserProfilePage = () => {
                     }`}
                     onClick={() => setSelectedAvatar(url)}
                   >
-                    <img src={url} alt="Avatar" className="rounded-circle" />
+                    <img
+                      src={url}
+                      width={70}
+                      height={70}
+                      alt="Avatar"
+                      className="rounded-circle"
+                    />
                     {selectedAvatar === url && (
                       <div className="selected-overlay">
                         <i className="bi bi-check-circle-fill"></i>
