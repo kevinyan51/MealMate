@@ -16,6 +16,7 @@ import { Typography } from '@mui/material';
 import ButtonModal from './ButtonModal';
 import MealCard from './MealCard';
 import { useParames } from 'react-router-dom';
+import { useToken } from '../components/Auth';
 
 const MealDetail = ({ mealId }) => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const MealDetail = ({ mealId }) => {
   const editMeal = () => {
     navigate(`/meals/${mealId}/edit`);
   };
+  const { user } = useToken();
 
   const deleteMeal = async () => {
     await fetch(
@@ -173,7 +175,9 @@ const MealDetail = ({ mealId }) => {
           </Box>
           <Box sx={{ flex: 1, p: 2 }}>
             <Typography variant="h5" mt={3} mb={3}>
-              Meals You Might Like
+              {user.role_id === 1 && 'Meals You Might Like'}
+              {user.role_id === 2 &&
+                'Your Other Meals That Are Loved By Subscribers'}
             </Typography>
             <Grid container spacing={2}>
               {chefMeals.map((meal) => (

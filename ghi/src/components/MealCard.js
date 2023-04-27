@@ -153,8 +153,8 @@ const MealCard = ({
             />
           )}
           <Typography variant="h7" fontWeight="bold">
-            {meal?.name?.length > 30
-              ? `${meal?.name?.slice(0, meal.name.lastIndexOf(' ', 30))}...`
+            {meal?.name?.length > 26
+              ? `${meal?.name?.slice(0, meal.name.lastIndexOf(' ', 26))}...`
               : meal.name}
           </Typography>
         </Box>

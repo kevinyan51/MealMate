@@ -16,8 +16,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MealCard from '../components/MealCard';
 import { IconButton, Typography } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
+import { useToken } from '../components/Auth';
 
 const BoxEditPage = () => {
+  const { user } = useToken();
   const navigate = useNavigate();
   const [box, setBox] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -59,13 +61,13 @@ const BoxEditPage = () => {
     setBox({ ...newBox, meals });
   };
 
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
   const [boxId, setBoxId] = useState(null);
 
   const getUserBox = async () => {
-    if (!userId) setUserId(1);
+    // if (!userId) setUserId(1);
     const url = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/users/${
-      userId || 1
+      user.id || 1
     }/box_id`;
     // console.log('url', url);
     const response = await fetch(url).catch((e) => {
@@ -78,8 +80,8 @@ const BoxEditPage = () => {
     }
   };
   useEffect(() => {
-    getUserBox();
-  }, []);
+    if (user) getUserBox();
+  }, [user]);
   const [selectedMeal, setSelectedMeal] = useState(null);
 
   const getOneBox = async () => {
@@ -123,9 +125,35 @@ const BoxEditPage = () => {
     // console.log('error');
   };
 
+  const orderNow = async () => {
+    const postOrderUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/orders?box_id=${boxId}`;
+    const response = await fetch(postOrderUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({ box_id: boxId }),
+    }).catch((e) => {
+      console.log('error ordering box', e);
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('data', data);
+      navigate(`/my-orders/${data.order_id}`);
+    } else {
+      console.log('error ordering box; response not ok');
+    }
+  };
+
   useEffect(() => {
     if (boxId) getOneBox();
   }, [boxId]);
+
+  useEffect(() => {
+    if (user && user.role_id == 2) {
+      navigate('/home');
+    }
+  }, [user]);
 
   return (
     <Box p={4}>
@@ -136,7 +164,7 @@ const BoxEditPage = () => {
         <Button variant="outlined" onClick={saveBox} sx={{ mr: 2 }}>
           save box
         </Button>
-        <Button variant="contained" sx={{ color: 'white' }}>
+        <Button variant="contained" onClick={orderNow} sx={{ color: 'white' }}>
           order now
         </Button>
       </Box>
