@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useToken } from '../components/Auth';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {
   const { user } = useToken();
+  const navigate = useNavigate();
 
   const [selectedAvatar, setSelectedAvatar] = useState(user?.picture_url);
   const [firstName, setFirstName] = useState(user?.first_name);
@@ -60,11 +62,9 @@ const UserProfilePage = () => {
         },
         body: JSON.stringify(payload),
       });
-
       if (!response.ok) {
         throw new Error('Unable to update user profile');
       }
-
       setSuccess(true);
     } catch (error) {
       console.error(error);
@@ -163,16 +163,22 @@ const UserProfilePage = () => {
                   <div
                     key={url}
                     className={`avatar-option mx-2 my-1 ${
-                      selectedAvatar === url ? 'selected' : ''
+                      selectedAvatar === url
+                        ? 'border border-primary rounded-circle'
+                        : ''
                     }`}
                     onClick={() => setSelectedAvatar(url)}
                   >
                     <img src={url} alt="Avatar" className="rounded-circle" />
+                    {selectedAvatar === url && (
+                      <div className="selected-overlay">
+                        <i className="bi bi-check-circle-fill"></i>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
-
             <div className="d-grid">
               <button
                 type="submit"
