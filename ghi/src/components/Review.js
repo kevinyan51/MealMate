@@ -86,7 +86,39 @@ const RatingDisplayCard = ({ review }) => {
   );
 };
 
-const RatingInputCard = ({ rating, setRating }) => {
+const RatingInputCard = ({ rating, setRating, user, mealId }) => {
+  const [review, setReview] = useState('');
+  const postReview = async () => {
+    // FIXME ADD REVIEW POSTING FUNCTIONALITY
+    const postReviewUrl = `${process.env.REACT_APP_USER_SERVICE_API_HOST}/api/reviews`;
+    const payload = {
+      subscriber_id: user.id,
+      meal_id: mealId,
+      rating: rating,
+      comment: review,
+    };
+    console.log('payload', payload);
+    const response = await fetch(postReviewUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      setReview('');
+    }
+    // class ReviewIn(BaseModel):
+    // subscriber_id: Optional[int]
+    // meal_id: Optional[int]
+    // rating: Optional[int]
+    // comment: Optional[str]
+
+    alert('review posted');
+    setReview('');
+  };
   return (
     <Box
       sx={{
@@ -122,6 +154,16 @@ const RatingInputCard = ({ rating, setRating }) => {
           id="standard-basic"
           label="Share your experience here..."
           variant="standard"
+          value={review}
+          onChange={(event) => {
+            setReview(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              postReview();
+            }
+          }}
         />
       </Box>
     </Box>
@@ -161,7 +203,12 @@ const Review = () => {
         {user?.role_id === 2 && 'See how your subscribers like this meal'}
       </Typography>
       {user?.role_id === 1 && (
-        <RatingInputCard rating={rating} setRating={setRating} />
+        <RatingInputCard
+          rating={rating}
+          setRating={setRating}
+          user={user}
+          mealId={mealId}
+        />
       )}
       <Grid
         container
