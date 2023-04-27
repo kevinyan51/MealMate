@@ -1,11 +1,16 @@
 import React from 'react';
 import { Box, Divider, Typography } from '@mui/material';
 import male_chef from '../assets/images/male_chef.png';
+import { useNavigate } from 'react-router-dom';
 
 const OrderItem = ({ meal, detailed_view = false }) => {
+  const navigate = useNavigate();
   return (
     <Box sx={{ borderRadius: 2, maxWidth: 1000 }}>
-      <Box sx={{ display: 'flex' }}>
+      <Box
+        sx={{ display: 'flex', cursor: 'pointer' }}
+        onClick={() => navigate(`/meals/${meal.meal_id}`)}
+      >
         <div
           style={{
             flex: 1,
