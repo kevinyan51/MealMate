@@ -105,7 +105,7 @@ class UserQueries:
                         return None
                     return self.record_to_user_out(record)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Cannot get user"}
 
     # ####GET USER BY ID#####
@@ -133,7 +133,7 @@ class UserQueries:
                         return None
                     return self.record_to_user_out(record)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Cannot get user"}
 
     # ####GET ALL USERS#####
@@ -160,7 +160,7 @@ class UserQueries:
                         self.record_to_user_out(record) for record in records
                     ]
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Cannot get all users"}
 
     # ####UPDATE USER#####
@@ -195,7 +195,7 @@ class UserQueries:
                     # print(record)
                     return self.record_to_user_update(record)
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Cannot update user"}
 
     # ####DELETE USER#####
@@ -212,7 +212,7 @@ class UserQueries:
                     )
                     return True
         except Exception as e:
-            # print(e)
+            print(e)
             return {"message": "Cannot delete user"}
 
     # ####ENCODERS#####
