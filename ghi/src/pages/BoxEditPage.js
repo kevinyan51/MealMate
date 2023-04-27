@@ -75,7 +75,7 @@ const BoxEditPage = () => {
       const data = await response.json();
       console.log('data', data);
       setBoxId(data);
-      await getOneBox(data);
+      if (data) await getOneBox(data);
     }
   };
   useEffect(() => {
@@ -141,10 +141,6 @@ const BoxEditPage = () => {
       console.log('error ordering box; response not ok');
     }
   };
-
-  useEffect(() => {
-    if (boxId) getOneBox();
-  }, [boxId]);
 
   useEffect(() => {
     if (user && user.role_id == 2) {
