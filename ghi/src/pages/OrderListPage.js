@@ -11,6 +11,7 @@ import {
 } from '@mui/icons-material';
 import { COLORS } from '../utils/constants';
 import { useToken } from '../components/Auth';
+import { Link } from 'react-router-dom';
 
 const TopRowIcons = ({ infoArray }) => {
   return (
@@ -82,12 +83,20 @@ const OrderList = ({ orders, selectedOrderId, setSelectedOrderId }) => {
                       ? COLORS.lightGrayBg
                       : 'white',
                 }}
-                onClick={() => {
-                  setSelectedOrderId(s.order_id);
-                }}
               >
                 <td style={{ paddingLeft: 20 }}>
-                  <a href={`/my-orders/${s.order_id}`}>{s.order_id}</a>
+                  <Link
+                    to={`/my-orders/${s.order_id}`}
+                    style={{
+                      fontFamily: 'Arial',
+                      color: '#007bff',
+                      textDecoration: 'none',
+                      cursor: 'pointer',
+                    }}
+                    className="hover-effect"
+                  >
+                    {s.order_id}
+                  </Link>
                 </td>
                 <td>
                   <Box>
@@ -157,8 +166,8 @@ const OrderListPage = () => {
     }
   };
   useEffect(() => {
-    fetchUserOrders();
-  }, []);
+    if (user?.id) fetchUserOrders();
+  }, [user]);
   const [selectedOrderId, setSelectedOrderId] = useState(orders[0]?.order_id);
   const [ordersInfo, setOrdersInfo] = useState([]);
   useEffect(() => {
