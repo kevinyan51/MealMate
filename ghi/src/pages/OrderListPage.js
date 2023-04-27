@@ -176,10 +176,10 @@ const OrderListPage = () => {
         {
           icon: () => <AttachMoneyIcon sx={{ color: 'white' }} />,
           text: 'Total Savings',
-          number: `$${
+          number: `$${(
             orders.reduce((acc, cur) => acc + cur.num_meals, 0) *
-            (16 - 9.99).toFixed(2)
-          }`,
+            (16 - 9.99)
+          ).toFixed(2)}`,
           bgcolor: COLORS.red,
         },
       ]);

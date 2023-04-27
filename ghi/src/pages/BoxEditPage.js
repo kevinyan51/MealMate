@@ -164,7 +164,14 @@ const BoxEditPage = () => {
         <Button variant="outlined" onClick={saveBox} sx={{ mr: 2 }}>
           save box
         </Button>
-        <Button variant="contained" onClick={orderNow} sx={{ color: 'white' }}>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await saveBox();
+            await orderNow();
+          }}
+          sx={{ color: 'white' }}
+        >
           order now
         </Button>
       </Box>

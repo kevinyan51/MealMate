@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { useToken } from "../components/Auth";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useToken } from '../components/Auth';
+import { useNavigate } from 'react-router-dom';
 
 function SignupPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [pictureUrl, setPictureUrl] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [pictureUrl, setPictureUrl] = useState('');
   const [roleId, setRoleId] = useState(1);
   const { signup, token } = useToken();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      navigate('/');
     }
   }, [token]);
 
@@ -50,12 +50,12 @@ function SignupPage() {
       roleId,
     });
     if (response.ok) {
-      setFirstName("");
-      setLastName("");
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setPictureUrl("");
+      setFirstName('');
+      setLastName('');
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      setPictureUrl('');
       setRoleId(1);
     }
   };
@@ -63,7 +63,7 @@ function SignupPage() {
   return (
     <div className="container mt-5">
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="p-4 mt-4">
             <h1>Signup</h1>
             <form onSubmit={handleSubmit}>
@@ -170,22 +170,22 @@ function SignupPage() {
                   className="form-check-input"
                 />
                 <label htmlFor="roleId" className="form-check-label">
-                  {roleId === 2 ? "Chef" : "Subscriber"}
+                  {roleId === 2 ? 'Chef' : 'Subscriber'}
                 </label>
               </div>
 
-              <button className="btn btn-primary">Create</button>
+              <button className="btn btn-success">Create</button>
             </form>
           </div>
-          <div className="col-lg-6">
-            <video
-              src="https://cdn.dribbble.com/userupload/4308814/file/original-27dcdfe3b29c9a6d02708e0ba50be957.mp4"
-              autoPlay
-              loop
-              muted
-              style={{ maxWidth: 800, opacity: 0.6 }}
-            />
-          </div>
+        </div>
+        <div className="col-lg-6" style={{ marginTop: '100px' }}>
+          <video
+            src="https://cdn.dribbble.com/userupload/4308814/file/original-27dcdfe3b29c9a6d02708e0ba50be957.mp4"
+            autoPlay
+            loop
+            muted
+            style={{ maxWidth: 400, opacity: 0.6 }}
+          />
         </div>
       </div>
     </div>
