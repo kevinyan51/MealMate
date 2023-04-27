@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import male_chef from '../assets/images/male_chef.png';
+import { useNavigate } from 'react-router-dom';
 
 const MealCreatePage = ({
   title = 'Create a New Meal',
@@ -8,6 +9,7 @@ const MealCreatePage = ({
   mealIn = null,
   buttonAction = null,
 }) => {
+  const navigate = useNavigate();
   const [chef, setChef] = useState('');
   const [name, setName] = useState('');
   const [name2, setName2] = useState('');
@@ -87,6 +89,8 @@ const MealCreatePage = ({
       setSpicy('');
       setCheese('');
       setPrice(9.99);
+      console.log(newMeal);
+      navigate(`/meals/${newMeal.id}`);
     }
   };
 
