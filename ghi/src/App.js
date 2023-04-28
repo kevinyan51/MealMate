@@ -15,6 +15,7 @@ import OrderDetailPage from './pages/OrderDetailPage.js';
 import { Box } from '@mui/material';
 import UserProfilePage from './pages/UserProfilePage';
 import DashboardPage from './pages/DashboardPage';
+import ChefDetailPage from './pages/ChefDetailPage.js';
 
 const domain = /https:\/\/[^/]+/;
 const basename = process.env.PUBLIC_URL.replace(domain, '');
@@ -57,6 +58,15 @@ const router = createBrowserRouter(
       children: [
         { path: '', element: <OrderListPage /> },
         { path: ':orderId', element: <OrderDetailPage /> },
+      ],
+    },
+    {
+      path: '/chefs',
+      element: <NavbarWrapper />,
+      errorElement: <ErrorPage />,
+      children: [
+        // { path: '', element: <ChefListPage/>},
+        { path: ':userId', element: <ChefDetailPage />},
       ],
     },
     {
