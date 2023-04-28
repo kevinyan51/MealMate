@@ -85,6 +85,7 @@ export function useToken() {
       setToken(null);
       setUser(null);
       navigate('/');
+      localStorage.removeItem('token');
     }
   }
 
