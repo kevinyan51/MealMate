@@ -222,12 +222,12 @@ function SignupPage() {
             </form>
           </div>
         </div>
-        <div className="col-lg-6" style={{ marginTop: '150px' }}>
+        <div className="col-lg-6" style={{ marginTop: '100px' }}>
           <img
             src="https://cdn.dribbble.com/users/1216686/screenshots/16931100/media/b1930bd54de00c7823af1aca78af4eec.gif"
             loop
             muted
-            style={{ maxWidth: 400, opacity: 0.6 }}
+            style={{ maxWidth: 450, opacity: 0.6 }}
           />
         </div>
       </div>
