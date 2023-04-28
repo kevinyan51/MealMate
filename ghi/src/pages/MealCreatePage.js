@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import male_chef from '../assets/images/male_chef.png';
 import { useNavigate } from 'react-router-dom';
+import { useToken } from '../components/Auth';
 
 const MealCreatePage = ({
   title = 'Create a New Meal',
@@ -10,7 +11,8 @@ const MealCreatePage = ({
   buttonAction = null,
 }) => {
   const navigate = useNavigate();
-  const [chef, setChef] = useState('');
+  const { user } = useToken();
+  const chef = user?.id;
   const [name, setName] = useState('');
   const [name2, setName2] = useState('');
   const [picture_url, setPicture_URL] = useState('');
@@ -27,7 +29,7 @@ const MealCreatePage = ({
 
   useEffect(() => {
     if (mealIn) {
-      setChef(mealIn.chef_id);
+      // setChef(mealIn.chef_id);
       setName(mealIn.name);
       setName2(mealIn.name2);
       setPicture_URL(mealIn.picture_url);
@@ -75,7 +77,6 @@ const MealCreatePage = ({
     const response = await fetch(mealUrl, fetchConfig);
     if (response.ok) {
       const newMeal = await response.json();
-      setChef('');
       setName('');
       setName2('');
       setPicture_URL('');
@@ -209,18 +210,6 @@ const MealCreatePage = ({
                 These information below are required to create a new meal to
                 display to subscribers.
               </Typography>
-              <Box className="form-floating mb-3">
-                <input
-                  value={chef}
-                  onChange={(event) => setChef(event.target.value)}
-                  id="chef_id"
-                  placeholder="chef_id"
-                  required
-                  type="text"
-                  className="form-control"
-                />
-                <label>Chef ID</label>
-              </Box>
               <Box className="form-floating mb-3">
                 <input
                   value={name}
