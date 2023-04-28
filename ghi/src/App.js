@@ -16,6 +16,7 @@ import { Box } from '@mui/material';
 import UserProfilePage from './pages/UserProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import { useToken } from './components/Auth';
+import ChefListPage from './pages/ChefListPage.js';
 
 const domain = /https:\/\/[^/]+/;
 const basename = process.env.PUBLIC_URL.replace(domain, '');
@@ -34,41 +35,42 @@ const NavbarWrapper = () => {
 const router = createBrowserRouter(
   [
     {
-      path: '/',
+      path: "/",
       element: <NavbarWrapper />,
       errorElement: <ErrorPage />,
       children: [
-        { path: '', element: <LandingPage /> },
-        { path: 'login', element: <LoginPage /> },
-        { path: 'signup', element: <SignupPage /> },
-        { path: 'home', element: <HomePage /> },
-        { path: 'profile', element: <UserProfilePage /> },
-        { path: 'dashboard', element: <DashboardPage /> },
+        { path: "", element: <LandingPage /> },
+        { path: "login", element: <LoginPage /> },
+        { path: "signup", element: <SignupPage /> },
+        { path: "home", element: <HomePage /> },
+        { path: "profile", element: <UserProfilePage /> },
+        { path: "dashboard", element: <DashboardPage /> },
+        { path: "cheflist", element: <ChefListPage /> },
       ],
     },
     {
-      path: '/my-box',
+      path: "/my-box",
       element: <NavbarWrapper />,
       errorElement: <ErrorPage />,
-      children: [{ path: '', element: <BoxEditPage /> }],
+      children: [{ path: "", element: <BoxEditPage /> }],
     },
     {
-      path: '/my-orders',
+      path: "/my-orders",
       element: <NavbarWrapper />,
       errorElement: <ErrorPage />,
       children: [
-        { path: '', element: <OrderListPage /> },
-        { path: ':orderId', element: <OrderDetailPage /> },
+        { path: "", element: <OrderListPage /> },
+        { path: ":orderId", element: <OrderDetailPage /> },
       ],
     },
     {
-      path: '/meals',
+      path: "/meals",
       element: <NavbarWrapper />,
       errorElement: <ErrorPage />,
       children: [
-        { path: 'new', element: <MealCreatePage /> },
-        { path: ':mealId', element: <MealDetailPage /> },
-        { path: ':mealId/edit', element: <MealEditPage /> },
+        { path: "new", element: <MealCreatePage /> },
+        { path: ":mealId", element: <MealDetailPage /> },
+        { path: ":mealId/edit", element: <MealEditPage /> },
       ],
     },
   ],
