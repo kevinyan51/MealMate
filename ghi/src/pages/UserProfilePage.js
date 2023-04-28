@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useToken } from '../components/Auth';
 import { Container, Row, Col } from 'react-bootstrap';
-import { Avatar } from '@mui/material';
+// import { Avatar } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
 
 const UserProfilePage = () => {

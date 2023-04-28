@@ -8,10 +8,20 @@ function SignupPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [pictureUrl, setPictureUrl] = useState('');
+  // const [pictureUrl, setPictureUrl] = useState('');
   const [roleId, setRoleId] = useState(1);
   const { signup, token } = useToken();
   const navigate = useNavigate();
+  const [selectedAvatar, setSelectedAvatar] = useState('');
+  const [avatarOptions, setAvatarOptions] = useState([
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Boy_headphones_lti3xz.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Woman_j4rs6u.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Woman_muslim_jf0peb.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Astronaut_dlwnxg.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Afroamerican_lb2kxl.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Scientist_kqoouj.png',
+    'https://res.cloudinary.com/dfdnr2jby/image/upload/v1682569873/Girl_zj4ylc.png',
+  ]);
 
   useEffect(() => {
     if (token) {
@@ -46,7 +56,7 @@ function SignupPage() {
       username,
       email,
       password,
-      pictureUrl,
+      pictureUrl: selectedAvatar,
       roleId,
     });
     if (response.ok) {
@@ -55,8 +65,9 @@ function SignupPage() {
       setUsername('');
       setEmail('');
       setPassword('');
-      setPictureUrl('');
+      // setPictureUrl('');
       setRoleId(1);
+      setSelectedAvatar('');
     }
   };
 
@@ -137,7 +148,40 @@ function SignupPage() {
                 <label htmlFor="password">Password</label>
               </div>
 
-              <div className="form-floating mb-3">
+              <div className="mb-3">
+                <label htmlFor="pictureUrl" className="form-label">
+                  Select Avatar:
+                </label>
+                <div className="d-flex flex-wrap mb-2">
+                  {avatarOptions.map((url) => (
+                    // <Avatar alt="Avatar" src={url} key={url} />
+                    <div
+                      key={url}
+                      className={`avatar-option mx-2 my-1 ${
+                        selectedAvatar === url
+                          ? 'border border-primary rounded-circle'
+                          : ''
+                      }`}
+                      onClick={() => setSelectedAvatar(url)}
+                    >
+                      <img
+                        src={url}
+                        width={70}
+                        height={70}
+                        alt="Avatar"
+                        className="rounded-circle"
+                      />
+                      {selectedAvatar === url && (
+                        <div className="selected-overlay">
+                          <i className="bi bi-check-circle-fill"></i>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* <div className="form-floating mb-3">
                 <select
                   onChange={(e) => setPictureUrl(e.target.value)}
                   value={pictureUrl}
@@ -158,7 +202,7 @@ function SignupPage() {
                   </option>
                 </select>
                 <label htmlFor="pictureUrl">Choose an Avatar</label>
-              </div>
+              </div> */}
 
               <div className="form-check form-switch mb-3">
                 <input
@@ -178,10 +222,9 @@ function SignupPage() {
             </form>
           </div>
         </div>
-        <div className="col-lg-6" style={{ marginTop: '100px' }}>
-          <video
-            src="https://cdn.dribbble.com/userupload/4308814/file/original-27dcdfe3b29c9a6d02708e0ba50be957.mp4"
-            autoPlay
+        <div className="col-lg-6" style={{ marginTop: '150px' }}>
+          <img
+            src="https://cdn.dribbble.com/users/1216686/screenshots/16931100/media/b1930bd54de00c7823af1aca78af4eec.gif"
             loop
             muted
             style={{ maxWidth: 400, opacity: 0.6 }}
